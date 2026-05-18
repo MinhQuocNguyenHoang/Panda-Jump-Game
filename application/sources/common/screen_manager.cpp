@@ -10,14 +10,39 @@
 
 #include "screen_manager.h"
 
+#include "sys_ctrl.h"
 #include "sys_dbg.h"
+#include "task_list.h"
+#include "timer.h"
 
 static ak_msg_t screen_msg_entry;
 
 static scr_mng_t* screen_manager = SCREEN_MANAGER_NULL;
 static view_screen_t* view_screen = VIEW_SCREEN_NULL;
 
-static uint8_t screen_none_update_mark = 0;
+static bool screen_render_started = true;
+static uint32_t screen_last_render_ms = 0;
+
+static void scr_mng_render_screen() {
+	uint32_t current_ms = sys_ctrl_millis();
+	uint32_t time_diff = current_ms - screen_last_render_ms;
+
+	/* Render screen if render interval is reached or first time render */
+	if (screen_render_started || \
+		(time_diff >= AC_DISPLAY_MINIMUM_SCREEN_RENDER_INTERVAL_MS)) \
+	{
+		screen_render_started = false;
+		screen_last_render_ms = current_ms;
+		view_render_screen(view_screen);
+	}
+	else {
+		// Timer set to trigger next rendering when render interval is reached
+		timer_set(	AC_TASK_DISPLAY_ID, \
+					AC_DISPLAY_RENDER_SCREEN, \
+					AC_DISPLAY_MINIMUM_SCREEN_RENDER_INTERVAL_MS - time_diff, \
+					TIMER_ONE_SHOT);
+	}
+}
 
 void scr_mng_ctor(scr_mng_t* scr_mng, screen_f init_scr, view_screen_t* scr_obj) {
 	/* init entry message */
@@ -34,13 +59,8 @@ void scr_mng_dispatch(ak_msg_t* msg) {
 		return;
 	}
 
-	screen_none_update_mark = 1;
-
 	screen_manager->screen(msg);
-
-	if (screen_none_update_mark) {
-		view_render_screen(view_screen);
-	}
+	scr_mng_render_screen();
 }
 
 void scr_mng_tran(screen_f target,  view_screen_t* scr_obj) {
@@ -55,11 +75,10 @@ void scr_mng_tran(screen_f target,  view_screen_t* scr_obj) {
 
 	/* entry new screen */
 	screen_manager->screen(&screen_msg_entry);
-	view_render_screen(view_screen);
 }
 
 void scr_mng_contain_screen_none_update_mark() {
-	screen_none_update_mark = 0;
+	timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_RENDER_SCREEN);
 }
 
 screen_f scr_mng_get_current_screen() {
