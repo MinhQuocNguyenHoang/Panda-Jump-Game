@@ -1,24 +1,13 @@
 #include "scr_welcome.h"
+#include <stdlib.h>
 
-#define WELCOME_TEXT_LINE_1_LEN (8)
-#define WELCOME_TEXT_LINE_2_LEN (5)
-#define WELCOME_TEXT_TOTAL_LEN                                                 \
-  (WELCOME_TEXT_LINE_1_LEN + WELCOME_TEXT_LINE_2_LEN)
-
-// static uint8_t welcome_text_index = 0;
-// static const char *welcome_text_line_1 = "Welcome";
-// static const char *welcome_text_line_2 = "to AK";
+static int16_t bug_y = 64;
+static int16_t arrow_x = -15;
+static int16_t arrow_y = 32;
+static int16_t panda_y = 64;
+static uint32_t tick_count = 0;
 
 static void view_scr_welcome();
-
-static void welcome_print_text_partial(const char *text, uint8_t max_chars) {
-  if (text == (const char *)0)
-    return;
-
-  for (uint8_t i = 0; i < max_chars && text[i] != '\0'; i++) {
-    view_render.print(text[i]);
-  }
-}
 
 view_dynamic_t dyn_view_welcome = {{
                                        .item_type = ITEM_TYPE_DYNAMIC,
@@ -36,25 +25,56 @@ view_screen_t scr_welcome = {
 void view_scr_welcome() {
   view_render.clear();
 
-  view_render.drawBitmap(32, 0, bamboo, 16, 64, WHITE);
-  view_render.drawBitmap(16, 0, panda_left, 16, 16, WHITE);
-  view_render.drawBitmap(23, 50, bug_left, 8, 10, WHITE);
+  view_render.drawBitmap(16, 0, bamboo, 8, 64, WHITE);
+  view_render.drawBitmap(104, 0, bamboo, 8, 64, WHITE);
 
-  // view_render.setTextSize(1);
-  // view_render.setTextColor(WHITE);
-  // view_render.setCursor(76, 12);
-  // welcome_print_text_partial(welcome_text_line_1, welcome_text_index);
-  // view_render.setCursor(84, 25);
-  // if (welcome_text_index > WELCOME_TEXT_LINE_1_LEN) {
-  //   welcome_print_text_partial(welcome_text_line_2,
-  //                              welcome_text_index - WELCOME_TEXT_LINE_1_LEN);
-  // }
+  // Draw background dynamic particles (simulating wind/leaves blowing
+  // leftwards)
+  view_render.drawPixel((128 - (tick_count * 2)) % 138 - 10, 15, WHITE);
+  view_render.drawPixel((128 - (tick_count * 3)) % 138 - 10, 35, WHITE);
+  view_render.drawPixel((128 - (tick_count * 1)) % 138 - 10, 48, WHITE);
+
+  // Draw crawling bug on the left bamboo
+  if ((tick_count / 2) % 2 == 0) {
+    view_render.drawBitmap(8, bug_y, bug_left, 8, 10, WHITE);
+  } else {
+    view_render.drawBitmap(24, bug_y, bug_right, 8, 10, WHITE);
+  }
+
+  // Draw panda on the right bamboo (facing left/right)
+  view_render.drawBitmap(92, panda_y, panda_left, 16, 16, WHITE);
+
+  // Draw the shooting arrow
+  view_render.drawBitmap(arrow_x, arrow_y, arrow, 10, 5, WHITE);
+
+  // Draw "PANDA JUMP" Title in the center (Size 2)
+  view_render.setTextSize(2);
+  view_render.setTextColor(WHITE);
+  view_render.setCursor(34, 10);
+  view_render.print("PANDA");
+  view_render.setCursor(40, 28);
+  view_render.print("JUMP");
+
+  // Draw flashing instruction "PRESS MODE TO PLAY"
+  if ((tick_count / 4) % 2 == 0) {
+    view_render.setTextSize(1);
+    view_render.setCursor(10, 52);
+    view_render.print("PRESS MODE TO PLAY");
+  }
 }
+
+void view_scr_welcome_update() {}
 
 void scr_welcome_handle(ak_msg_t *msg) {
   switch (msg->sig) {
   case SCREEN_ENTRY: {
     APP_DBG_SIG("SCREEN_ENTRY\n");
+
+    bug_y = 64;
+    arrow_x = -15;
+    arrow_y = 15 + (rand() % 20);
+    panda_y = 64;
+    tick_count = 0;
 
     BUZZER_PlaySound(BUZZER_SOUND_WELCOME);
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK,
@@ -66,6 +86,26 @@ void scr_welcome_handle(ak_msg_t *msg) {
   case AC_DISPLAY_WELCOME_TEXT_ANIM_TICK: {
     APP_DBG_SIG("AC_DISPLAY_WELCOME_TEXT_ANIM_TICK\n");
 
+    tick_count++;
+
+    // Bug crawls up
+    bug_y -= 1;
+    if (bug_y < -10) {
+      bug_y = 64;
+    }
+
+    // Arrow shoots across
+    arrow_x += 4;
+    if (arrow_x > 128) {
+      arrow_x = -15;
+      arrow_y = 15 + (rand() % 20);
+    }
+
+    // Panda crawls up
+    panda_y -= 1;
+    if (panda_y < -10) {
+      panda_y = 64;
+    }
   } break;
 
   case AC_DISPLAY_BUTON_MODE_PRESSED: {
@@ -76,8 +116,8 @@ void scr_welcome_handle(ak_msg_t *msg) {
 
   case AC_DISPLAY_SHOW_IDLE: {
     APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
-    timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK);
-    SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
+    // timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK);
+    // SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
   } break;
 
   case AC_DISPLAY_BUTON_UP_PRESSED:
