@@ -27,8 +27,20 @@ void btn_mode_callback(void *b) {
 
   case BUTTON_SW_STATE_LONG_PRESSED: {
     APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_MODE_LONG_PRESSED);
+
   } break;
 
+  case BUTTON_SW_STATE_RELEASED: {
+    APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_RELEASED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_MODE_RELEASED);
+
+  } break;
+
+  case BUTTON_SW_STATE_LONG_RELEASED: {
+    APP_DBG("[btn_mode_callback] BUTTON_SW_STATE_LONG_RELEASED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_MODE_LONG_RELEASED);
+  } break;
   default:
     break;
   }
@@ -46,6 +58,17 @@ void btn_up_callback(void *b) {
 
   case BUTTON_SW_STATE_LONG_PRESSED: {
     APP_DBG("[btn_up_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_UP_LONG_PRESSED);
+  } break;
+
+  case BUTTON_SW_STATE_RELEASED: {
+    APP_DBG("[btn_up_callback] BUTTON_SW_STATE_RELEASED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_UP_RELEASED);
+  } break;
+
+  case BUTTON_SW_STATE_LONG_RELEASED: {
+    APP_DBG("[btn_up_callback] BUTTON_SW_STATE_LONG_RELEASED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_UP_LONG_RELEASED);
   } break;
 
   default:
@@ -65,6 +88,17 @@ void btn_down_callback(void *b) {
 
   case BUTTON_SW_STATE_LONG_PRESSED: {
     APP_DBG("[btn_down_callback] BUTTON_SW_STATE_LONG_PRESSED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_LONG_PRESSED);
+  } break;
+
+  case BUTTON_SW_STATE_RELEASED: {
+    APP_DBG("[btn_down_callback] BUTTON_SW_STATE_RELEASED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_RELEASED);
+  } break;
+
+  case BUTTON_SW_STATE_LONG_RELEASED: {
+    APP_DBG("[btn_down_callback] BUTTON_SW_STATE_LONG_RELEASED\n");
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_BUTON_DOWN_LONG_RELEASED);
   } break;
 
   default:

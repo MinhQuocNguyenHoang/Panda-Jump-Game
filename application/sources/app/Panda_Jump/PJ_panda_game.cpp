@@ -10,8 +10,10 @@ void pj_panda_game_handler(ak_msg_t *msg) {
   switch (msg->sig) {
   case PJ_PANDA_GAME_SETUP: {
     APP_DBG_SIG("Panda game setup\n");
-    panda.x = AXIS_X_PANDA;
+    panda.lane = 1; /* Start on middle bamboo */
+    panda.side = 0; /* Start on Left side of the bamboo */
     panda.y = AXIS_Y_PANDA;
+    panda.survival_time_ticks = 0;
     task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
   } break;
 
@@ -34,32 +36,31 @@ void pj_panda_game_handler(ak_msg_t *msg) {
   } break;
 
   case PJ_PANDA_JUMP_LEFT: {
-    if (panda.x >= 111) {
-      panda.x = 111;
-    } else {
-      panda.x += 24;
-      // Climbing up effect on jump
-      if (panda.y > 6) {
-        panda.y -= 8;
-      } else {
-        panda.y = 6;
+    if (panda.side == 1) { // On right side of bamboo
+      panda.side = 0;      // Jump to left side of same bamboo
+    } else {               // On left side of bamboo
+      if (panda.lane > 0) {
+        panda.lane--;
+        panda.side = 1;    // Land on right side of left bamboo
       }
     }
     task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
   } break;
 
   case PJ_PANDA_JUMP_RIGHT: {
-    if (panda.x <= 15) {
-      panda.x = 15;
-    } else {
-      panda.x -= 24;
-      // Climbing up effect on jump
-      if (panda.y > 6) {
-        panda.y -= 8;
-      } else {
-        panda.y = 6;
+    if (panda.side == 0) { // On left side of bamboo
+      panda.side = 1;      // Jump to right side of same bamboo
+    } else {               // On right side of bamboo
+      if (panda.lane < 2) {
+        panda.lane++;
+        panda.side = 0;    // Land on left side of right bamboo
       }
     }
+    task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
+  } break;
+
+  case PJ_GAME_TIME_TICK: {
+    panda.survival_time_ticks++;
     task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
   } break;
 

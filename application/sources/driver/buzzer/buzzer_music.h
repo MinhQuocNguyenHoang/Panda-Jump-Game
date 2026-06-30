@@ -28,6 +28,7 @@ typedef enum {
 	BUZZER_SOUND_LOWSCORE,
 	BUZZER_SOUND_SUPER_MARIO,
 	BUZZER_SOUND_MERRY_CHRISTMAS,
+	BUZZER_SOUND_PANDA_THEME,
 	BUZZER_SOUND_TONE_1,
 	BUZZER_SOUND_TONE_2,
 	BUZZER_SOUND_TONE_3,
@@ -51,6 +52,7 @@ extern const Tone_TypeDef tones_highscore[];
 extern const Tone_TypeDef tones_lowscore[];
 extern const Tone_TypeDef tones_supper_mario_bros[];
 extern const Tone_TypeDef tones_merry_christmas[];
+extern const Tone_TypeDef tones_panda_theme[];
 extern const Tone_TypeDef sTone1[];
 extern const Tone_TypeDef sTone2[];
 extern const Tone_TypeDef sTone3[];

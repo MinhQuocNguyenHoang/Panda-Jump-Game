@@ -76,7 +76,7 @@ void scr_welcome_handle(ak_msg_t *msg) {
     panda_y = 64;
     tick_count = 0;
 
-    BUZZER_PlaySound(BUZZER_SOUND_WELCOME);
+    BUZZER_PlaySound(BUZZER_SOUND_PANDA_THEME);
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK,
               AC_DISPLAY_WELCOME_TEXT_ANIM_TICK_INTERVAL, TIMER_PERIODIC);
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,

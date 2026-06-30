@@ -18,11 +18,12 @@
 #define SIZE_BITMAP_AXIS_Y (16)
 #define SIZE_BITMAP_AXIS_X (16)
 #define AXIS_Y_PANDA (32)
-#define AXIS_X_PANDA (0)
 
 typedef struct {
-  uint32_t x, y;
-
+  uint8_t lane;                /* 0: Left, 1: Middle, 2: Right */
+  uint8_t side;                /* 0: Left side, 1: Right side of the bamboo */
+  int32_t y;                   /* Vertical position */
+  uint32_t survival_time_ticks; /* Counts periodic timer ticks */
 } PJ_PANDA_t;
 
 extern PJ_PANDA_t panda;
