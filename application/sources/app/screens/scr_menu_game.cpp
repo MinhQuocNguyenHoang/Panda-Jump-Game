@@ -1,8 +1,8 @@
 #include "scr_menu_game.h"
+#include <string.h>
 
 /* Variable and Struct Declaration - Menu game */
 /*****************************************************************************/
-#define STEP_MENU_CHOSSE (22)
 #define NUMBER_MENU_ITEMS (4)
 #define SCREEN_MENU_H (64)
 
@@ -24,11 +24,11 @@ struct menu_items
 };
 
 // Menu items name
-static char menu_items_name[NUMBER_MENU_ITEMS][20] = {
-    "   Panda Game   ", // item 1
-    "   Setting      ", // item 2
-    "   Charts       ", // item 3
-    "   Exit         ", // item 4
+static const char *menu_items_name[NUMBER_MENU_ITEMS] = {
+    "PANDA GAME", // item 1
+    "SETTING",    // item 2
+    "CHARTS",     // item 3
+    "EXIT",       // item 4
 };
 
 // Menu items icon
@@ -46,13 +46,6 @@ static uint8_t menu_items_icon_size_h[NUMBER_MENU_ITEMS] = {15, 16, 16, 16};
 // Menu items color
 static uint8_t menu_items_icon_color[NUMBER_MENU_ITEMS];
 
-// Menu items axis Y for drawing the 3 visible frames
-static uint8_t menu_items_icon_axis_y[3] = {
-    2,  // icon frame 1
-    24, // icon frame 2
-    46  // icon frame 3
-};
-
 typedef struct
 {
   int screen;
@@ -65,30 +58,10 @@ union scr_menu_t
   menu_items items;
 };
 
-// Scroll bar
-typedef struct
-{
-  uint8_t axis_x = 126;
-  uint8_t axis_y = 0;
-  uint8_t size_W = 3;
-  uint8_t size_h = SCREEN_MENU_H / NUMBER_MENU_ITEMS;
-} scr_menu_scroll_bar_t;
-
-// Frames
-typedef struct
-{
-  uint8_t axis_x = 0;
-  uint8_t axis_y = 0;
-  uint8_t size_w = 123;
-  uint8_t size_h = 20;
-  uint8_t size_r = 3;
-} scr_menu_frames_t;
-
 static screen_t screen_menu;
 static scr_menu_t menu_chosse;
-static scr_menu_scroll_bar_t scroll_bar;
-static scr_menu_frames_t frame_white;
-static scr_menu_frames_t frame[3];
+
+static const uint8_t MENU_BOX_X[] = {7, 37, 67, 97};
 
 /*****************************************************************************/
 /* View - Menu game */
@@ -110,42 +83,53 @@ view_screen_t scr_menu_game = {
 
 static void view_scr_menu_game()
 {
-#define PJ_GAME_MENU_ICON_AXIS_X (7)
-#define PJ_GAME_MENU_TEXT_AXIS_X (20)
+  view_render.clear();
 
-  // Scroll bar
-  view_render.fillRect(scroll_bar.axis_x - 1, scroll_bar.axis_y,
-                       scroll_bar.size_W, scroll_bar.size_h, WHITE);
-  view_render.drawBitmap(scroll_bar.axis_x, 0, dot_icon, 1, SCREEN_MENU_H,
-                         WHITE);
-
-  // Frame White
-  view_render.fillRoundRect(frame_white.axis_x, frame_white.axis_y,
-                            frame_white.size_w, frame_white.size_h,
-                            frame_white.size_r, WHITE);
-
-  for (uint8_t i = 0; i < 3; i++)
-  {
-    // Frames
-    view_render.drawRoundRect(frame[i].axis_x, frame[i].axis_y, frame[i].size_w,
-                              frame[i].size_h, frame[i].size_r, WHITE);
-    // Icon
-    view_render.drawBitmap(PJ_GAME_MENU_ICON_AXIS_X, menu_items_icon_axis_y[i],
-                           menu_items_icon[screen_menu.screen + i],
-                           menu_items_icon_size_w[screen_menu.screen + i],
-                           menu_items_icon_size_h[screen_menu.screen + i],
-                           menu_items_icon_color[screen_menu.screen + i]);
-  }
-
-  // Text Menu
+  // Draw header Title "PANDA JUMP" in the center at Y=2
   view_render.setTextSize(1);
-  for (uint8_t i = 0; i < 3; i++)
+  view_render.setTextColor(WHITE);
+  view_render.setCursor(34, 2);
+  view_render.print("PANDA JUMP");
+  
+  // Draw divider line below header
+  view_render.drawFastHLine(0, 12, 128, WHITE);
+
+  // Draw the 4 cards horizontally
+  for (uint8_t i = 0; i < NUMBER_MENU_ITEMS; i++)
   {
-    view_render.setTextColor(menu_items_icon_color[screen_menu.screen + i]);
-    view_render.setCursor(PJ_GAME_MENU_TEXT_AXIS_X,
-                          menu_items_icon_axis_y[i] + 5);
-    view_render.print(menu_items_name[screen_menu.screen + i]);
+    uint8_t bx = MENU_BOX_X[i];
+    
+    if (i == screen_menu.location)
+    {
+      // Highlighted item: solid white background
+      view_render.fillRoundRect(bx, 16, 24, 24, 3, WHITE);
+    }
+    else
+    {
+      // Unselected item: outline only
+      view_render.drawRoundRect(bx, 16, 24, 24, 3, WHITE);
+    }
+
+    // Draw the icon centered inside the 24x24 box
+    uint8_t iw = menu_items_icon_size_w[i];
+    uint8_t ih = menu_items_icon_size_h[i];
+    uint8_t ix = bx + 12 - (iw / 2);
+    uint8_t iy = 16 + 12 - (ih / 2);
+
+    view_render.drawBitmap(ix, iy, menu_items_icon[i], iw, ih, menu_items_icon_color[i]);
   }
+
+  // Draw selected menu item name centered at Y=44
+  view_render.setTextColor(WHITE);
+  const char* name = menu_items_name[screen_menu.location];
+  uint8_t name_len = strlen(name);
+  uint8_t name_x = 64 - (name_len * 6) / 2;
+  view_render.setCursor(name_x, 44);
+  view_render.print(name);
+
+  // Draw bottom help text centered at Y=54
+  view_render.setCursor(4, 54);
+  view_render.print("UP/DN:Move  MODE:Ok");
 }
 
 /*****************************************************************************/
@@ -153,19 +137,9 @@ static void view_scr_menu_game()
 /*****************************************************************************/
 static void update_menu_screen_chosse()
 {
-  // Frames location
-  frame_white.axis_y = frame[screen_menu.location - screen_menu.screen].axis_y;
-  frame[0].axis_y = 0;
-  frame[1].axis_y = 22;
-  frame[2].axis_y = 44;
-
   // update color menu
   menu_chosse._id = 1 << screen_menu.location;
   MENU_ITEMS_ICON_COLOR();
-
-  // update scroll bar
-  scroll_bar.axis_y =
-      (SCREEN_MENU_H * screen_menu.location / NUMBER_MENU_ITEMS);
 }
 
 static void screen_tran_menu()
@@ -243,22 +217,6 @@ void scr_menu_game_handle(ak_msg_t *msg)
       screen_menu.location--;
     }
 
-    if (frame_white.axis_y == frame[0].axis_y)
-    {
-      if (screen_menu.screen > 0)
-      {
-        screen_menu.screen--;
-      }
-    }
-    else if (frame_white.axis_y == frame[1].axis_y)
-    {
-      frame_white.axis_y = frame[0].axis_y;
-    }
-    else if (frame_white.axis_y == frame[2].axis_y)
-    {
-      frame_white.axis_y = frame[1].axis_y;
-    }
-
     update_menu_screen_chosse();
     if (game_settings.sound_en)
     {
@@ -276,22 +234,6 @@ void scr_menu_game_handle(ak_msg_t *msg)
     if (screen_menu.location < NUMBER_MENU_ITEMS - 1)
     {
       screen_menu.location++;
-    }
-
-    if (frame_white.axis_y == frame[0].axis_y)
-    {
-      frame_white.axis_y = frame[1].axis_y;
-    }
-    else if (frame_white.axis_y == frame[1].axis_y)
-    {
-      frame_white.axis_y = frame[2].axis_y;
-    }
-    else if (frame_white.axis_y == frame[2].axis_y)
-    {
-      if (screen_menu.screen < NUMBER_MENU_ITEMS - 3)
-      {
-        screen_menu.screen++;
-      }
     }
 
     update_menu_screen_chosse();

@@ -1,6 +1,6 @@
 #include "scr_panda_game.h"
 
-uint8_t ar_game_state = GAME_OFF;
+uint8_t pj_game_state = GAME_OFF;
 
 static void view_scr_panda_game();
 static uint32_t tick_count = 0;
@@ -134,11 +134,16 @@ void pj_bug_display(bug_t *bug)
   }
 }
 
+void pj_arrow_display(arrow_t *arrow_t)
+{
+  view_render.drawBitmap(arrow_t->x, arrow_t->y, arrow, 10, 5, WHITE);
+}
+
 static void view_scr_panda_game()
 {
   view_render.clear();
 
-  if (ar_game_state == GAME_PLAY)
+  if (pj_game_state == GAME_PLAY)
   {
     // Draw falling/blowing leaves (leaf effect)
     view_render.drawPixel((128 - (tick_count * 2)) % 138 - 10, 15, WHITE);
@@ -163,26 +168,94 @@ static void view_scr_panda_game()
         }
       }
     }
-  }
-  else if (ar_game_state == GAME_OVER)
-  {
-    view_render.setTextSize(1);
-    view_render.setTextColor(WHITE);
 
-    view_render.setCursor(35, 10);
+    for (int i = 0; i < MAX_ARROWS; i++)
+    {
+      if (arrows[i].active)
+      {
+        pj_arrow_display(&arrows[i]);
+      }
+    }
+  }
+  else if (pj_game_state == GAME_OVER)
+  {
+    // Draw card border
+    view_render.drawRoundRect(2, 4, 124, 56, 4, WHITE);
+
+    // Draw header bar
+    view_render.fillRect(4, 6, 120, 11, WHITE);
+
+    // Draw "GAME OVER" centered inside header bar
+    view_render.setTextSize(1);
+    view_render.setTextColor(BLACK);
+    view_render.setCursor(37, 8);
     view_render.print("GAME OVER");
 
-    view_render.setCursor(20, 25);
-    view_render.print("Score: ");
+    // Draw middle vertical divider for stats
+    view_render.drawFastVLine(64, 20, 22, WHITE);
+
+    // --- Left Column: Score ---
+    uint8_t score_x_icon, score_x_text;
+    if (panda.score < 10)
+    {
+      score_x_icon = 24;
+      score_x_text = 35;
+    }
+    else if (panda.score < 100)
+    {
+      score_x_icon = 21;
+      score_x_text = 32;
+    }
+    else
+    {
+      score_x_icon = 18;
+      score_x_text = 29;
+    }
+    // Draw star icon
+    view_render.drawPixel(score_x_icon + 3, 24, WHITE);
+    view_render.drawLine(score_x_icon + 1, 25, score_x_icon + 5, 25, WHITE);
+    view_render.drawLine(score_x_icon, 26, score_x_icon + 6, 26, WHITE);
+    view_render.drawLine(score_x_icon + 2, 27, score_x_icon + 4, 27, WHITE);
+    view_render.drawPixel(score_x_icon + 1, 28, WHITE);
+    view_render.drawPixel(score_x_icon + 5, 28, WHITE);
+    // Print Score
+    view_render.setTextColor(WHITE);
+    view_render.setCursor(score_x_text, 23);
     view_render.print(panda.score);
 
-    view_render.setCursor(20, 35);
-    view_render.print("Time: ");
-    view_render.print(panda.survival_time_ticks / 2);
+    // --- Right Column: Time ---
+    uint32_t seconds = panda.survival_time_ticks / 2;
+    uint8_t time_x_icon, time_x_text;
+    if (seconds < 10)
+    {
+      time_x_icon = 83;
+      time_x_text = 95;
+    }
+    else if (seconds < 100)
+    {
+      time_x_icon = 80;
+      time_x_text = 92;
+    }
+    else
+    {
+      time_x_icon = 77;
+      time_x_text = 89;
+    }
+    // Draw clock icon
+    view_render.drawCircle(time_x_icon + 4, 27, 4, WHITE);
+    view_render.drawLine(time_x_icon + 4, 27, time_x_icon + 4, 25, WHITE);
+    view_render.drawLine(time_x_icon + 4, 27, time_x_icon + 6, 27, WHITE);
+    // Print Time
+    view_render.setCursor(time_x_text, 23);
+    view_render.print(seconds);
     view_render.print("s");
 
-    view_render.setCursor(2, 52);
-    view_render.print("UP:Retry MODE:Exit");
+    // Draw bottom divider line
+    view_render.drawFastHLine(2, 45, 124, WHITE);
+
+    // Draw instruction line centered
+    view_render.setCursor(7, 49);
+    view_render.print("UP:Retry  MODE:Exit");
   }
 }
 
@@ -193,7 +266,7 @@ void scr_panda_game_handle(ak_msg_t *msg)
   case SCREEN_ENTRY:
   {
     APP_DBG_SIG("PANDA SCREEN_ENTRY\n");
-    ar_game_state = GAME_PLAY;
+    pj_game_state = GAME_PLAY;
     if (game_settings.sound_en)
     {
       BUZZER_PlaySound(BUZZER_SOUND_LETS_GO);
@@ -202,6 +275,7 @@ void scr_panda_game_handle(ak_msg_t *msg)
     timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
     task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_GAME_SETUP);
     task_post_pure_msg(PJ_BUG_GAME_ID, PJ_BUG_GAME_SETUP);
+    task_post_pure_msg(PJ_ARROW_GAME_ID, PJ_ARROW_GAME_SETUP);
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE, 100,
               TIMER_PERIODIC);
   }
@@ -212,15 +286,18 @@ void scr_panda_game_handle(ak_msg_t *msg)
     tick_count++;
 
     // Perform collision check on display ticks (for higher responsiveness)
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       task_post_pure_msg(PJ_BUG_GAME_ID, PJ_BUG_GAME_UPDATE);
+      task_post_pure_msg(PJ_ARROW_GAME_ID, PJ_ARROW_GAME_UPDATE);
 
       // Increment survival time ticks every 5 display ticks (5 * 100ms = 500ms)
       if (tick_count % 5 == 0)
       {
         panda.survival_time_ticks++;
       }
+
+
 
       uint8_t bx = BAMBOO_X[panda.lane];
       uint8_t px = (panda.side == 0) ? (bx - 12) : (bx + 4);
@@ -248,7 +325,24 @@ void scr_panda_game_handle(ak_msg_t *msg)
           }
           else // Collision from below or level: Game Over!
           {
-            ar_game_state = GAME_OVER;
+            pj_game_state = GAME_OVER;
+            if (game_settings.sound_en)
+            {
+              BUZZER_PlaySound(BUZZER_SOUND_BANG);
+            }
+            break;
+          }
+        }
+      }
+
+      // Check collision with arrows
+      if (pj_game_state == GAME_PLAY)
+      {
+        for (int i = 0; i < MAX_ARROWS; i++)
+        {
+          if (arrows[i].active && check_collision(px, panda.y, arrows[i].x, arrows[i].y))
+          {
+            pj_game_state = GAME_OVER;
             if (game_settings.sound_en)
             {
               BUZZER_PlaySound(BUZZER_SOUND_BANG);
@@ -264,15 +358,16 @@ void scr_panda_game_handle(ak_msg_t *msg)
   case AC_DISPLAY_BUTON_UP_PRESSED:
   {
     APP_DBG_SIG("PANDA LEFT\n");
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_JUMP_RIGHT);
     }
-    else if (ar_game_state == GAME_OVER)
+    else if (pj_game_state == GAME_OVER)
     {
-      ar_game_state = GAME_PLAY;
+      pj_game_state = GAME_PLAY;
       task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_GAME_SETUP);
       task_post_pure_msg(PJ_BUG_GAME_ID, PJ_BUG_GAME_SETUP);
+      task_post_pure_msg(PJ_ARROW_GAME_ID, PJ_ARROW_GAME_SETUP);
     }
   }
   break;
@@ -280,7 +375,7 @@ void scr_panda_game_handle(ak_msg_t *msg)
   case AC_DISPLAY_BUTON_DOWN_PRESSED:
   {
     APP_DBG_SIG("PANDA RIGHT\n");
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_JUMP_LEFT);
     }
@@ -290,11 +385,11 @@ void scr_panda_game_handle(ak_msg_t *msg)
   case AC_DISPLAY_BUTON_MODE_RELEASED:
   {
     APP_DBG_SIG("PANDA UP\n");
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_GAME_UP);
     }
-    else if (ar_game_state == GAME_OVER)
+    else if (pj_game_state == GAME_OVER)
     {
       timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
       SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
@@ -305,7 +400,7 @@ void scr_panda_game_handle(ak_msg_t *msg)
   case AC_DISPLAY_BUTON_MODE_LONG_RELEASED:
   {
     APP_DBG_SIG("PANDA DOWN\n");
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_GAME_DOWN);
     }

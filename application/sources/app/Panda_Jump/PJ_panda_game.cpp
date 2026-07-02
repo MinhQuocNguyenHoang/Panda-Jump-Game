@@ -21,7 +21,7 @@ void pj_panda_game_handler(ak_msg_t *msg)
 
   case PJ_PANDA_GAME_UP:
   {
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       if (panda.y <= 0)
       {
@@ -38,7 +38,7 @@ void pj_panda_game_handler(ak_msg_t *msg)
 
   case PJ_PANDA_GAME_DOWN:
   {
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       if (panda.y >= AXIS_Y_PANDA_MAX)
       {
@@ -55,7 +55,7 @@ void pj_panda_game_handler(ak_msg_t *msg)
 
   case PJ_PANDA_JUMP_LEFT:
   {
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       if (panda.side == 1)
       {                 // On right side of bamboo
@@ -76,7 +76,7 @@ void pj_panda_game_handler(ak_msg_t *msg)
 
   case PJ_PANDA_JUMP_RIGHT:
   {
-    if (ar_game_state == GAME_PLAY)
+    if (pj_game_state == GAME_PLAY)
     {
       if (panda.side == 0)
       {                 // On left side of bamboo
@@ -94,8 +94,6 @@ void pj_panda_game_handler(ak_msg_t *msg)
     task_post_pure_msg(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
   }
   break;
-
-
 
   default:
     break;

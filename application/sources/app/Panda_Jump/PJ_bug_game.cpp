@@ -28,22 +28,22 @@ void bug_update()
     switch (game_settings.difficulty)
     {
     case 0: // EASY
-        max_bugs = 2;
-        spawn_prob = 20;
+        max_bugs = 1;
+        spawn_prob = 6; // 6% chance every 100ms (~1.6 seconds average cooldown)
         speed_min = 1;
         speed_max = 1;
         break;
     case 1: // MEDIUM
-        max_bugs = 3;
-        spawn_prob = 40;
+        max_bugs = 2;
+        spawn_prob = 12; // 12% chance every 100ms (~0.8 seconds average cooldown)
         speed_min = 1;
         speed_max = 2;
         break;
     case 2: // HARD
     default:
-        max_bugs = 5;
-        spawn_prob = 60;
-        speed_min = 2;
+        max_bugs = 3;
+        spawn_prob = 20; // 20% chance every 100ms (~0.5 seconds average cooldown)
+        speed_min = 1;
         speed_max = 3;
         break;
     }

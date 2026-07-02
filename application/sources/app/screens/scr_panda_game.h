@@ -16,6 +16,7 @@
 
 #include "PJ_panda_game.h"
 #include "PJ_bug_game.h"
+#include "PJ_arrow_game.h"
 #include "screens.h"
 #include "screens_bitmap.h"
 #include "scr_setting.h"
@@ -24,7 +25,7 @@
 #define GAME_PLAY (1)
 #define GAME_OVER (2)
 
-extern uint8_t ar_game_state;
+extern uint8_t pj_game_state;
 
 extern view_dynamic_t dyn_view_panda_game;
 extern view_screen_t scr_panda_game;

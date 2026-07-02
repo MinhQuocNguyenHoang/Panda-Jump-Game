@@ -50,17 +50,19 @@ void view_scr_welcome()
   // Draw "PANDA JUMP" Title in the center (Size 2)
   view_render.setTextSize(2);
   view_render.setTextColor(WHITE);
-  view_render.setCursor(34, 10);
+  view_render.setCursor(34, 6);
   view_render.print("PANDA");
-  view_render.setCursor(40, 28);
+  view_render.setCursor(40, 23);
   view_render.print("JUMP");
 
   // Draw flashing instruction "PRESS MODE TO PLAY"
   if ((tick_count / 4) % 2 == 0)
   {
     view_render.setTextSize(1);
-    view_render.setCursor(10, 52);
-    view_render.print("PRESS MODE TO PLAY");
+    view_render.setCursor(34, 44);
+    view_render.print("PRESS MODE");
+    view_render.setCursor(43, 53);
+    view_render.print("TO PLAY");
   }
 }
 
