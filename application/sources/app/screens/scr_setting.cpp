@@ -112,8 +112,10 @@ void scr_setting_handle(ak_msg_t *msg)
     {
       select_index = 2; // Xoay vòng về dòng cuối
     }
-
-    BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    if (game_settings.sound_en)
+    {
+      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
   }
   break;
 
@@ -132,7 +134,10 @@ void scr_setting_handle(ak_msg_t *msg)
       select_index = 0; // Xoay vòng về dòng đầu
     }
 
-    BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    if (game_settings.sound_en)
+    {
+      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
   }
   break;
 
@@ -148,7 +153,10 @@ void scr_setting_handle(ak_msg_t *msg)
     { // Đổi Độ khó
       game_settings.difficulty = (game_settings.difficulty + 1) % 3;
       APP_DBG("[scr_setting] Difficulty set: %d\n", game_settings.difficulty);
-      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      if (game_settings.sound_en)
+      {
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      }
     }
     break;
 
@@ -156,7 +164,10 @@ void scr_setting_handle(ak_msg_t *msg)
     { // Đổi Âm thanh
       game_settings.sound_en = !game_settings.sound_en;
       APP_DBG("[scr_setting] Sound set: %d\n", game_settings.sound_en);
-      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      if (game_settings.sound_en)
+      {
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      }
     }
     break;
 
@@ -164,7 +175,10 @@ void scr_setting_handle(ak_msg_t *msg)
     { // Thoát về Menu
       APP_DBG("[scr_setting] Chọn BACK - Thoát ra Menu chính\n");
       timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
-      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      if (game_settings.sound_en)
+      {
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      }
       SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
     }
     break;

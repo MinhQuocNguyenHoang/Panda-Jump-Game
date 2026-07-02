@@ -208,8 +208,8 @@ extern "C"
     AC_DBG_TEST_1 = AK_USER_DEFINE_SIG,
   };
 
-#define PJ_GAME_TIME_TICK_INTERVAL (500)
-#define PJ_GAME_TIME_EXIT_INTERVAL (5000)
+  // #define PJ_GAME_TIME_TICK_INTERVAL (500)
+  // #define PJ_GAME_TIME_EXIT_INTERVAL (5000)
 
   /*PANDA GAME 'PANDA' task define*/
   enum
@@ -227,6 +227,13 @@ extern "C"
   {
     PJ_BUG_GAME_SETUP = AK_USER_DEFINE_SIG,
     PJ_BUG_GAME_UPDATE,
+  };
+
+  /*ARROW GAME 'ARROW' task define*/
+  enum
+  {
+    PJ_ARROW_GAME_SETUP = AK_USER_DEFINE_SIG,
+    PJ_ARROW_GAME_UPDATE,
   };
 
 /*****************************************************************************/

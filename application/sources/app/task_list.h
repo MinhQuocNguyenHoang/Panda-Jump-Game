@@ -31,6 +31,7 @@ enum
   /*Panda game ID*/
   PJ_PANDA_GAME_ID,
   PJ_BUG_GAME_ID,
+  PJ_ARROW_GAME_ID,
 
 #if defined(TASK_ZIGBEE_EN)
   AC_TASK_ZIGBEE_ID,
@@ -88,6 +89,7 @@ extern void task_zigbee(ak_msg_t *);
 /*PANDA game handler*/
 extern void pj_panda_game_handler(ak_msg_t *);
 extern void pj_bugs_game_handler(ak_msg_t *);
+extern void pj_arrow_game_handler(ak_msg_t *);
 
 /* RF24 NETWORK TASK */
 extern void task_rf24_phy(ak_msg_t *);

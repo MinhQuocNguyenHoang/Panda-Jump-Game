@@ -6,15 +6,17 @@
 #define NUMBER_MENU_ITEMS (4)
 #define SCREEN_MENU_H (64)
 
-#define MENU_ITEMS_ICON_COLOR()                                                \
-  do {                                                                         \
-    menu_items_icon_color[0] = !menu_chosse.items.is_item_1;                   \
-    menu_items_icon_color[1] = !menu_chosse.items.is_item_2;                   \
-    menu_items_icon_color[2] = !menu_chosse.items.is_item_3;                   \
-    menu_items_icon_color[3] = !menu_chosse.items.is_item_4;                   \
+#define MENU_ITEMS_ICON_COLOR()                              \
+  do                                                         \
+  {                                                          \
+    menu_items_icon_color[0] = !menu_chosse.items.is_item_1; \
+    menu_items_icon_color[1] = !menu_chosse.items.is_item_2; \
+    menu_items_icon_color[2] = !menu_chosse.items.is_item_3; \
+    menu_items_icon_color[3] = !menu_chosse.items.is_item_4; \
   } while (0);
 
-struct menu_items {
+struct menu_items
+{
   unsigned int is_item_1 : 1;
   unsigned int is_item_2 : 1;
   unsigned int is_item_3 : 1;
@@ -51,18 +53,21 @@ static uint8_t menu_items_icon_axis_y[3] = {
     46  // icon frame 3
 };
 
-typedef struct {
+typedef struct
+{
   int screen;
   int location;
 } screen_t;
 
-union scr_menu_t {
+union scr_menu_t
+{
   uint32_t _id = 1;
   menu_items items;
 };
 
 // Scroll bar
-typedef struct {
+typedef struct
+{
   uint8_t axis_x = 126;
   uint8_t axis_y = 0;
   uint8_t size_W = 3;
@@ -70,7 +75,8 @@ typedef struct {
 } scr_menu_scroll_bar_t;
 
 // Frames
-typedef struct {
+typedef struct
+{
   uint8_t axis_x = 0;
   uint8_t axis_y = 0;
   uint8_t size_w = 123;
@@ -102,7 +108,8 @@ view_screen_t scr_menu_game = {
     .focus_item = 0,
 };
 
-static void view_scr_menu_game() {
+static void view_scr_menu_game()
+{
 #define PJ_GAME_MENU_ICON_AXIS_X (7)
 #define PJ_GAME_MENU_TEXT_AXIS_X (20)
 
@@ -117,7 +124,8 @@ static void view_scr_menu_game() {
                             frame_white.size_w, frame_white.size_h,
                             frame_white.size_r, WHITE);
 
-  for (uint8_t i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < 3; i++)
+  {
     // Frames
     view_render.drawRoundRect(frame[i].axis_x, frame[i].axis_y, frame[i].size_w,
                               frame[i].size_h, frame[i].size_r, WHITE);
@@ -131,7 +139,8 @@ static void view_scr_menu_game() {
 
   // Text Menu
   view_render.setTextSize(1);
-  for (uint8_t i = 0; i < 3; i++) {
+  for (uint8_t i = 0; i < 3; i++)
+  {
     view_render.setTextColor(menu_items_icon_color[screen_menu.screen + i]);
     view_render.setCursor(PJ_GAME_MENU_TEXT_AXIS_X,
                           menu_items_icon_axis_y[i] + 5);
@@ -142,7 +151,8 @@ static void view_scr_menu_game() {
 /*****************************************************************************/
 /* Handle - Menu game */
 /*****************************************************************************/
-static void update_menu_screen_chosse() {
+static void update_menu_screen_chosse()
+{
   // Frames location
   frame_white.axis_y = frame[screen_menu.location - screen_menu.screen].axis_y;
   frame[0].axis_y = 0;
@@ -158,97 +168,139 @@ static void update_menu_screen_chosse() {
       (SCREEN_MENU_H * screen_menu.location / NUMBER_MENU_ITEMS);
 }
 
-static void screen_tran_menu() {
-  switch (screen_menu.location) {
-  case 0: { // Play Panda Game
+static void screen_tran_menu()
+{
+  switch (screen_menu.location)
+  {
+  case 0:
+  { // Play Panda Game
     SCREEN_TRAN(scr_panda_game_handle, &scr_panda_game);
-  } break;
+  }
+  break;
 
-  case 1: {                               // Setting
+  case 1:
+  { // Setting
     SCREEN_TRAN(scr_setting_handle, &scr_setting);
-  } break;
+  }
+  break;
 
-  case 2: {                               // Charts
+  case 2:
+  {                                       // Charts
     BUZZER_PlaySound(BUZZER_SOUND_3BEEP); // placeholder sound
-  } break;
+  }
+  break;
 
-  case 3: { // Exit to welcome/idle
+  case 3:
+  { // Exit to welcome/idle
     SCREEN_TRAN(scr_welcome_handle, &scr_welcome);
-  } break;
+  }
+  break;
 
   default:
     break;
   }
 }
 
-void scr_menu_game_handle(ak_msg_t *msg) {
-  switch (msg->sig) {
-  case SCREEN_ENTRY: {
+void scr_menu_game_handle(ak_msg_t *msg)
+{
+  switch (msg->sig)
+  {
+  case SCREEN_ENTRY:
+  {
     APP_DBG_SIG("MENU SCREEN_ENTRY\n");
     screen_menu.screen = 0;
     screen_menu.location = 0;
     update_menu_screen_chosse();
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
-  } break;
+  }
+  break;
 
-  case AC_DISPLAY_SHOW_IDLE: {
+  case AC_DISPLAY_SHOW_IDLE:
+  {
     APP_DBG_SIG("MENU AC_DISPLAY_SHOW_IDLE\n");
     timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
     SCREEN_TRAN(scr_idle_handle, &scr_idle);
-  } break;
+  }
+  break;
 
-  case AC_DISPLAY_BUTON_MODE_PRESSED: { // note spelling: BUTON
+  case AC_DISPLAY_BUTON_MODE_PRESSED:
+  { // note spelling: BUTON
     APP_DBG_SIG("MENU AC_DISPLAY_BUTON_MODE_PRESSED\n");
     timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
     screen_tran_menu();
-  } break;
+  }
+  break;
 
-  case AC_DISPLAY_BUTON_UP_PRESSED: { // note spelling: BUTON
+  case AC_DISPLAY_BUTON_UP_PRESSED:
+  { // note spelling: BUTON
     APP_DBG_SIG("MENU AC_DISPLAY_BUTON_UP_PRESSED\n");
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
 
-    if (screen_menu.location > 0) {
+    if (screen_menu.location > 0)
+    {
       screen_menu.location--;
     }
 
-    if (frame_white.axis_y == frame[0].axis_y) {
-      if (screen_menu.screen > 0) {
+    if (frame_white.axis_y == frame[0].axis_y)
+    {
+      if (screen_menu.screen > 0)
+      {
         screen_menu.screen--;
       }
-    } else if (frame_white.axis_y == frame[1].axis_y) {
+    }
+    else if (frame_white.axis_y == frame[1].axis_y)
+    {
       frame_white.axis_y = frame[0].axis_y;
-    } else if (frame_white.axis_y == frame[2].axis_y) {
+    }
+    else if (frame_white.axis_y == frame[2].axis_y)
+    {
       frame_white.axis_y = frame[1].axis_y;
     }
 
     update_menu_screen_chosse();
-    BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-  } break;
+    if (game_settings.sound_en)
+    {
+      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+  }
+  break;
 
-  case AC_DISPLAY_BUTON_DOWN_PRESSED: { // note spelling: BUTON
+  case AC_DISPLAY_BUTON_DOWN_PRESSED:
+  { // note spelling: BUTON
     APP_DBG_SIG("MENU AC_DISPLAY_BUTON_DOWN_PRESSED\n");
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
 
-    if (screen_menu.location < NUMBER_MENU_ITEMS - 1) {
+    if (screen_menu.location < NUMBER_MENU_ITEMS - 1)
+    {
       screen_menu.location++;
     }
 
-    if (frame_white.axis_y == frame[0].axis_y) {
+    if (frame_white.axis_y == frame[0].axis_y)
+    {
       frame_white.axis_y = frame[1].axis_y;
-    } else if (frame_white.axis_y == frame[1].axis_y) {
+    }
+    else if (frame_white.axis_y == frame[1].axis_y)
+    {
       frame_white.axis_y = frame[2].axis_y;
-    } else if (frame_white.axis_y == frame[2].axis_y) {
-      if (screen_menu.screen < NUMBER_MENU_ITEMS - 3) {
+    }
+    else if (frame_white.axis_y == frame[2].axis_y)
+    {
+      if (screen_menu.screen < NUMBER_MENU_ITEMS - 3)
+      {
         screen_menu.screen++;
       }
     }
 
     update_menu_screen_chosse();
-    BUZZER_PlaySound(BUZZER_SOUND_CLICK);
-  } break;
+    if (game_settings.sound_en)
+    {
+      BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+    }
+  }
+  break;
 
   default:
     break;

@@ -12,6 +12,7 @@ VPATH += sources/app/Panda_Jump
 SOURCES_CPP += sources/app/task_system.cpp
 SOURCES_CPP += sources/app/Panda_Jump/PJ_panda_game.cpp
 SOURCES_CPP += sources/app/Panda_Jump/PJ_bug_game.cpp
+SOURCES_CPP += sources/app/Panda_Jump/PJ_arrow_game.cpp
 SOURCES_CPP += sources/app/app.cpp
 SOURCES_CPP += sources/app/app_data.cpp
 SOURCES_CPP += sources/app/app_non_clear_ram.cpp
