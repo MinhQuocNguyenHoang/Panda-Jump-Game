@@ -1,10 +1,12 @@
 #include "scr_welcome.h"
+#include "scr_setting.h"
 #include <stdlib.h>
 
-static int16_t bug_y = 64;
-static int16_t arrow_x = -15;
-static int16_t arrow_y = 32;
-static int16_t panda_y = 64;
+static int16_t bug_y_1;
+static int16_t bug_y_2;
+static int16_t arrow_x;
+static int16_t arrow_y;
+static int16_t panda_y;
 static uint32_t tick_count = 0;
 
 static void view_scr_welcome();
@@ -22,7 +24,8 @@ view_screen_t scr_welcome = {
     .focus_item = 0,
 };
 
-void view_scr_welcome() {
+void view_scr_welcome()
+{
   view_render.clear();
 
   view_render.drawBitmap(16, 0, bamboo, 8, 64, WHITE);
@@ -35,11 +38,8 @@ void view_scr_welcome() {
   view_render.drawPixel((128 - (tick_count * 1)) % 138 - 10, 48, WHITE);
 
   // Draw crawling bug on the left bamboo
-  if ((tick_count / 2) % 2 == 0) {
-    view_render.drawBitmap(8, bug_y, bug_left, 8, 10, WHITE);
-  } else {
-    view_render.drawBitmap(24, bug_y, bug_right, 8, 10, WHITE);
-  }
+  view_render.drawBitmap(8, bug_y_2, bug_left_down, 8, 10, WHITE);
+  view_render.drawBitmap(24, bug_y_1, bug_right, 8, 10, WHITE);
 
   // Draw panda on the right bamboo (facing left/right)
   view_render.drawBitmap(92, panda_y, panda_left, 16, 16, WHITE);
@@ -56,7 +56,8 @@ void view_scr_welcome() {
   view_render.print("JUMP");
 
   // Draw flashing instruction "PRESS MODE TO PLAY"
-  if ((tick_count / 4) % 2 == 0) {
+  if ((tick_count / 4) % 2 == 0)
+  {
     view_render.setTextSize(1);
     view_render.setCursor(10, 52);
     view_render.print("PRESS MODE TO PLAY");
@@ -65,68 +66,92 @@ void view_scr_welcome() {
 
 void view_scr_welcome_update() {}
 
-void scr_welcome_handle(ak_msg_t *msg) {
-  switch (msg->sig) {
-  case SCREEN_ENTRY: {
+void scr_welcome_handle(ak_msg_t *msg)
+{
+  switch (msg->sig)
+  {
+  case SCREEN_ENTRY:
+  {
     APP_DBG_SIG("SCREEN_ENTRY\n");
-
-    bug_y = 64;
+    bug_y_1 = 64;
+    bug_y_2 = 0;
     arrow_x = -15;
     arrow_y = 15 + (rand() % 20);
     panda_y = 64;
     tick_count = 0;
 
-    BUZZER_PlaySound(BUZZER_SOUND_PANDA_THEME);
+    if (game_settings.sound_en)
+    {
+      BUZZER_PlaySound(BUZZER_SOUND_PANDA_THEME);
+    }
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK,
               AC_DISPLAY_WELCOME_TEXT_ANIM_TICK_INTERVAL, TIMER_PERIODIC);
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
-  } break;
+  }
+  break;
 
-  case AC_DISPLAY_WELCOME_TEXT_ANIM_TICK: {
+  case AC_DISPLAY_WELCOME_TEXT_ANIM_TICK:
+  {
     APP_DBG_SIG("AC_DISPLAY_WELCOME_TEXT_ANIM_TICK\n");
 
     tick_count++;
 
     // Bug crawls up
-    bug_y -= 1;
-    if (bug_y < -10) {
-      bug_y = 64;
+    bug_y_1 -= 1;
+    if (bug_y_1 < -10)
+    {
+      bug_y_1 = 64;
     }
 
+    // Bug crawls down
+    bug_y_2 += 1;
+    if (bug_y_2 > 64)
+    {
+      bug_y_2 = 0;
+    }
     // Arrow shoots across
     arrow_x += 4;
-    if (arrow_x > 128) {
+    if (arrow_x > 128)
+    {
       arrow_x = -15;
       arrow_y = 15 + (rand() % 20);
     }
 
     // Panda crawls up
     panda_y -= 1;
-    if (panda_y < -10) {
+    if (panda_y < -10)
+    {
       panda_y = 64;
     }
-  } break;
+  }
+  break;
 
-  case AC_DISPLAY_BUTON_MODE_PRESSED: {
+  case AC_DISPLAY_BUTON_MODE_PRESSED:
+  {
     APP_DBG_SIG("AC_DISPLAY_BUTON_MODE_PRESSED\n");
     timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK);
     SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
-  } break;
+  }
+  break;
 
-  case AC_DISPLAY_SHOW_IDLE: {
+  case AC_DISPLAY_SHOW_IDLE:
+  {
     APP_DBG_SIG("AC_DISPLAY_SHOW_IDLE\n");
     // timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK);
     // SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
-  } break;
+  }
+  break;
 
   case AC_DISPLAY_BUTON_UP_PRESSED:
-  case AC_DISPLAY_BUTON_DOWN_PRESSED: {
+  case AC_DISPLAY_BUTON_DOWN_PRESSED:
+  {
     APP_DBG_SIG("AC_DISPLAY_BUTON_%s_PRESSED\n",
                 msg->sig == AC_DISPLAY_BUTON_UP_PRESSED ? "UP" : "DOWN");
     timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_WELCOME_TEXT_ANIM_TICK);
     SCREEN_TRAN(scr_qrcode_handle, &scr_qrcode);
-  } break;
+  }
+  break;
 
   default:
     break;

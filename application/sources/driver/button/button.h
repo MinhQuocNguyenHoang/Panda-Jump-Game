@@ -2,7 +2,8 @@
 #define __BUTTON_H__
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #include <stdint.h>
@@ -11,7 +12,7 @@ extern "C" {
 #define BUTTON_DRIVER_NG (0x01)
 
 #define BUTTON_SHORT_PRESS_MIN_TIME (20) /* 20ms */
-#define BUTTON_LONG_PRESS_TIME (200)     /* 500ms */
+#define BUTTON_LONG_PRESS_TIME (200)     /* 100ms */
 
 #define BUTTON_DISABLE (0x00)
 #define BUTTON_ENABLE (0x01)
@@ -28,34 +29,35 @@ extern "C" {
 #define BUTTON_SW_STATE_RELEASED (0x02)
 #define BUTTON_SW_STATE_LONG_RELEASED (0x03)
 
-typedef void (*pf_button_ctrl)();
-typedef uint8_t (*pf_button_read)();
-typedef void (*pf_button_callback)(void *);
+  typedef void (*pf_button_ctrl)();
+  typedef uint8_t (*pf_button_read)();
+  typedef void (*pf_button_callback)(void *);
 
-typedef struct {
-  uint8_t id;
-  uint8_t enable;
-  uint8_t state;
-  uint8_t counter_enable;
+  typedef struct
+  {
+    uint8_t id;
+    uint8_t enable;
+    uint8_t state;
+    uint8_t counter_enable;
 
-  uint32_t counter;
-  uint32_t unit;
+    uint32_t counter;
+    uint32_t unit;
 
-  pf_button_ctrl init;
-  pf_button_read read;
+    pf_button_ctrl init;
+    pf_button_read read;
 
-  pf_button_callback callback;
+    pf_button_callback callback;
 
-  uint8_t last_hw_state;
-  uint8_t debounce_cnt;
-} button_t;
+    uint8_t last_hw_state;
+    uint8_t debounce_cnt;
+  } button_t;
 
-uint8_t button_init(button_t *button, uint32_t u, uint8_t id,
-                    pf_button_ctrl init, pf_button_read read,
-                    pf_button_callback callback);
-void button_enable(button_t *button);
-void button_disable(button_t *button);
-void button_timer_polling(button_t *button);
+  uint8_t button_init(button_t *button, uint32_t u, uint8_t id,
+                      pf_button_ctrl init, pf_button_read read,
+                      pf_button_callback callback);
+  void button_enable(button_t *button);
+  void button_disable(button_t *button);
+  void button_timer_polling(button_t *button);
 
 #ifdef __cplusplus
 }

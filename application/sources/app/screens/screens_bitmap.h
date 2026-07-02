@@ -16,8 +16,11 @@ extern const unsigned char PROGMEM panda_left[];
 extern const unsigned char PROGMEM panda_right[];
 extern const unsigned char PROGMEM bug_right[];
 extern const unsigned char PROGMEM bug_left[];
+extern const unsigned char PROGMEM bug_right_down[];
+extern const unsigned char PROGMEM bug_left_down[];
 extern const unsigned char PROGMEM arrow[];
 extern const unsigned char PROGMEM boom[];
 extern const unsigned char PROGMEM bamboo[];
-
+extern const unsigned char PROGMEM bamboo_leaf_left[];
+extern const unsigned char PROGMEM bamboo_leaf_right[];
 #endif //__SCREENS_BITMAP_H__

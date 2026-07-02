@@ -12,7 +12,8 @@ extern const task_polling_t app_task_polling_table[];
  *  Note: Task id MUST be increasing order.
  */
 /*****************************************************************************/
-enum {
+enum
+{
   /* SYSTEM TASKS */
   TASK_TIMER_TICK_ID,
 
@@ -29,6 +30,7 @@ enum {
 
   /*Panda game ID*/
   PJ_PANDA_GAME_ID,
+  PJ_BUG_GAME_ID,
 
 #if defined(TASK_ZIGBEE_EN)
   AC_TASK_ZIGBEE_ID,
@@ -57,7 +59,8 @@ enum {
  *  Note: Task id MUST be increasing order.
  */
 /*****************************************************************************/
-enum {
+enum
+{
   /* APP TASKS */
   AC_TASK_POLLING_ZIGBEE_ID,
   AC_TASK_POLLING_CONSOLE_ID,
@@ -84,6 +87,7 @@ extern void task_zigbee(ak_msg_t *);
 
 /*PANDA game handler*/
 extern void pj_panda_game_handler(ak_msg_t *);
+extern void pj_bugs_game_handler(ak_msg_t *);
 
 /* RF24 NETWORK TASK */
 extern void task_rf24_phy(ak_msg_t *);

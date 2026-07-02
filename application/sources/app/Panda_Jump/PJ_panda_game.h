@@ -18,6 +18,9 @@
 #define SIZE_BITMAP_AXIS_Y (16)
 #define SIZE_BITMAP_AXIS_X (16)
 #define AXIS_Y_PANDA (32)
+#define AXIS_Y_PANDA_MAX (48)
+#define AXIS_X_PANDA_MAX (127)
+#define AXIS_X_PANDA_JUMP_MAX (111)
 
 typedef struct {
   uint8_t lane;                /* 0: Left, 1: Middle, 2: Right */

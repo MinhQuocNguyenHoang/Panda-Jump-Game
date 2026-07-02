@@ -53,4 +53,7 @@ extern view_dynamic_t dyn_view_panda_game;
 extern view_screen_t scr_panda_game;
 extern void scr_panda_game_handle(ak_msg_t* msg);
 
+// scr_setting
+#include "scr_setting.h"
+
 #endif //__SCREENS_H__

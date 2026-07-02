@@ -22,6 +22,7 @@ const task_t app_task_table[] = {
 
     /*PANDA GAME*/
     {PJ_PANDA_GAME_ID, TASK_PRI_LEVEL_4, pj_panda_game_handler},
+    {PJ_BUG_GAME_ID, TASK_PRI_LEVEL_4, pj_bugs_game_handler},
 
 #if defined(TASK_ZIGBEE_EN)
     {AC_TASK_ZIGBEE_ID, TASK_PRI_LEVEL_4, task_zigbee},

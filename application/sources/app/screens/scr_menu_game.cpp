@@ -165,7 +165,7 @@ static void screen_tran_menu() {
   } break;
 
   case 1: {                               // Setting
-    BUZZER_PlaySound(BUZZER_SOUND_3BEEP); // placeholder sound
+    SCREEN_TRAN(scr_setting_handle, &scr_setting);
   } break;
 
   case 2: {                               // Charts

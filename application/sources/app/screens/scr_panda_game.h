@@ -17,6 +17,7 @@
 #include "PJ_panda_game.h"
 #include "screens.h"
 #include "screens_bitmap.h"
+#include "scr_setting.h"
 
 #define GAME_OFF (0)
 #define GAME_PLAY (1)
