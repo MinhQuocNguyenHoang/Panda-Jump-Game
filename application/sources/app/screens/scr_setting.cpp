@@ -5,8 +5,9 @@
 
 /* Định nghĩa và khởi tạo biến cấu hình toàn cục */
 game_settings_t game_settings = {
-    .difficulty = 1, /* Mặc định độ khó là MEDIUM (1) */
-    .sound_en = 0    /* Mặc định bật âm thanh (1) */
+    .difficulty = 1,  /* Mặc định độ khó là MEDIUM (1) */
+    .sound_en = 0,    /* Mặc định tắt âm thanh (0) */
+    .time_limit = 1   /* Mặc định thời gian là 60s (1) */
 };
 
 /* Vị trí dòng được chọn hiện hành: 0 = Difficulty, 1 = Sound, 2 = Back */
@@ -28,6 +29,24 @@ view_screen_t scr_setting = {
 };
 
 /* Hàm vẽ nội dung màn hình Cài đặt lên buffer hiển thị OLED */
+// Hàm vẽ một dòng Cài đặt tổng quát (hỗ trợ in nhãn, in giá trị và vẽ con trỏ chọn)
+static void drawSettingItem(int16_t y, const char* label, const char* value, bool is_selected)
+{
+  view_render.setCursor(15, y);
+  view_render.print(label);
+  if (value != nullptr)
+  {
+    view_render.print(value);
+  }
+
+  // Vẽ con trỏ chỉ mục nếu dòng này đang được chọn
+  if (is_selected)
+  {
+    view_render.setCursor(5, y);
+    view_render.print(">");
+  }
+}
+
 static void view_scr_setting()
 {
   view_render.clear();
@@ -38,42 +57,22 @@ static void view_scr_setting()
   view_render.setCursor(32, 2);
   view_render.print("--- SETTINGS ---");
 
-  // Vẽ dòng 1: Cấu hình độ khó (DIFFICULTY)
-  view_render.setCursor(15, 18);
-  view_render.print("DIFFICULTY: ");
-  if (game_settings.difficulty == 0)
-  {
-    view_render.print("EASY");
-  }
-  else if (game_settings.difficulty == 1)
-  {
-    view_render.print("MEDIUM");
-  }
-  else
-  {
-    view_render.print("HARD");
-  }
+  // Hàng 1: DIFFICULTY (Độ khó) tại y = 16
+  const char* diff_str = (game_settings.difficulty == 0) ? "EASY" :
+                         (game_settings.difficulty == 1) ? "MEDIUM" : "HARD";
+  drawSettingItem(16, "DIFFICULTY: ", diff_str, select_index == 0);
 
-  // Vẽ dòng 2: Cấu hình âm thanh (SOUND)
-  view_render.setCursor(15, 33);
-  view_render.print("SOUND:      ");
-  if (game_settings.sound_en == 1)
-  {
-    view_render.print("ON");
-  }
-  else
-  {
-    view_render.print("OFF");
-  }
+  // Hàng 2: SOUND (Âm thanh) tại y = 27
+  const char* sound_str = (game_settings.sound_en == 1) ? "ON" : "OFF";
+  drawSettingItem(27, "SOUND:      ", sound_str, select_index == 1);
 
-  // Vẽ dòng 3: Quay về Menu
-  view_render.setCursor(15, 48);
-  view_render.print("BACK TO MENU");
+  // Hàng 3: TIME LIMIT (Thời gian) tại y = 38
+  const char* time_str = (game_settings.time_limit == 0) ? "30s" :
+                         (game_settings.time_limit == 1) ? "60s" : "90s";
+  drawSettingItem(38, "TIME LIMIT: ", time_str, select_index == 2);
 
-  // Vẽ con trỏ lựa chọn hình chữ ">"
-  int16_t pointer_y = 18 + (select_index * 15);
-  view_render.setCursor(5, pointer_y);
-  view_render.print(">");
+  // Hàng 4: BACK TO MENU (Quay lại) tại y = 49
+  drawSettingItem(49, "BACK TO MENU", nullptr, select_index == 3);
 }
 
 /* Hàm xử lý sự kiện (FSM) cho màn hình Cài đặt */
@@ -110,7 +109,7 @@ void scr_setting_handle(ak_msg_t *msg)
     }
     else
     {
-      select_index = 2; // Xoay vòng về dòng cuối
+      select_index = 3; // Xoay vòng về dòng cuối
     }
     if (game_settings.sound_en)
     {
@@ -125,7 +124,7 @@ void scr_setting_handle(ak_msg_t *msg)
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
 
-    if (select_index < 2)
+    if (select_index < 3)
     {
       select_index++;
     }
@@ -172,6 +171,17 @@ void scr_setting_handle(ak_msg_t *msg)
     break;
 
     case 2:
+    { // Đổi Thời gian (Time Limit)
+      game_settings.time_limit = (game_settings.time_limit + 1) % 3;
+      APP_DBG("[scr_setting] Time limit set: %d\n", game_settings.time_limit);
+      if (game_settings.sound_en)
+      {
+        BUZZER_PlaySound(BUZZER_SOUND_CLICK);
+      }
+    }
+    break;
+
+    case 3:
     { // Thoát về Menu
       APP_DBG("[scr_setting] Chọn BACK - Thoát ra Menu chính\n");
       timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);

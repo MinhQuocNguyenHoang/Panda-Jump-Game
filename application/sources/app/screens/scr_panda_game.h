@@ -20,10 +20,12 @@
 #include "screens.h"
 #include "screens_bitmap.h"
 #include "scr_setting.h"
+#include "scr_chart.h"
 
 #define GAME_OFF (0)
 #define GAME_PLAY (1)
 #define GAME_OVER (2)
+#define GAME_WIN (3)
 
 extern uint8_t pj_game_state;
 

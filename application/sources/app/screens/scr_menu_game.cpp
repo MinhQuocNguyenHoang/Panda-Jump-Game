@@ -159,8 +159,8 @@ static void screen_tran_menu()
   break;
 
   case 2:
-  {                                       // Charts
-    BUZZER_PlaySound(BUZZER_SOUND_3BEEP); // placeholder sound
+  { // Charts
+    SCREEN_TRAN(scr_chart_handle, &scr_chart);
   }
   break;
 

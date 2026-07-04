@@ -8,9 +8,11 @@
 #include "task_display.h"
 
 /* Cấu trúc lưu trữ cấu hình cài đặt của trò chơi */
-typedef struct {
+typedef struct
+{
   uint8_t difficulty; /* 0: EASY, 1: MEDIUM, 2: HARD */
   uint8_t sound_en;   /* 0: OFF (Tắt), 1: ON (Bật âm thanh) */
+  uint8_t time_limit; /* 0: 30s, 1: 60s, 2: 90s */
 } game_settings_t;
 
 /* Khai báo biến cấu hình toàn cục để các màn hình khác có thể sử dụng bằng cách include file header này */

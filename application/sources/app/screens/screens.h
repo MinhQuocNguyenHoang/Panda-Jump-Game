@@ -26,34 +26,41 @@
 // scr_idle
 extern view_dynamic_t dyn_view_idle;
 extern view_screen_t scr_idle;
-extern void scr_idle_handle(ak_msg_t* msg);
+extern void scr_idle_handle(ak_msg_t *msg);
 
 // scr_qrcode
 extern view_dynamic_t dyn_view_qrcode;
 extern view_screen_t scr_qrcode;
-extern void scr_qrcode_handle(ak_msg_t* msg);
+extern void scr_qrcode_handle(ak_msg_t *msg);
 
 // scr_startup
 extern view_dynamic_t dyn_view_startup;
 extern view_screen_t scr_startup;
-extern void scr_startup_handle(ak_msg_t* msg);
+extern void scr_startup_handle(ak_msg_t *msg);
 
 // scr_welcome
 extern view_dynamic_t dyn_view_welcome;
 extern view_screen_t scr_welcome;
-extern void scr_welcome_handle(ak_msg_t* msg);
+extern void scr_welcome_handle(ak_msg_t *msg);
 
 // scr_menu_game
 extern view_dynamic_t dyn_view_menu;
 extern view_screen_t scr_menu_game;
-extern void scr_menu_game_handle(ak_msg_t* msg);
+extern void scr_menu_game_handle(ak_msg_t *msg);
 
 // scr_panda_game
 extern view_dynamic_t dyn_view_panda_game;
 extern view_screen_t scr_panda_game;
-extern void scr_panda_game_handle(ak_msg_t* msg);
+extern void scr_panda_game_handle(ak_msg_t *msg);
 
 // scr_setting
-#include "scr_setting.h"
+extern view_dynamic_t dyn_view_setting;
+extern view_screen_t scr_setting;
+extern void scr_setting_handle(ak_msg_t *msg);
 
+// scr_chart
+extern view_dynamic_t dyn_view_chart;
+extern view_screen_t scr_chart;
+extern void scr_chart_handle(ak_msg_t *msg);
+extern uint32_t top_scores[3];
 #endif //__SCREENS_H__
