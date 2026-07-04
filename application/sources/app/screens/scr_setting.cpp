@@ -5,9 +5,9 @@
 
 /* Global configuration variable definition and initialization */
 game_settings_t game_settings = {
-    .difficulty = 1,  /* Default difficulty is MEDIUM (1) */
-    .sound_en = 0,    /* Default sound is OFF (0) */
-    .time_limit = 1   /* Default time limit is 60s (1) */
+    .difficulty = 1, /* Default difficulty is MEDIUM (1) */
+    .sound_en = 0,   /* Default sound is OFF (0) */
+    .time_limit = 1  /* Default time limit is 60s (1) */
 };
 
 /* Position of current selected index: 0 = Difficulty, 1 = Sound, 2 = Time Limit, 3 = Back */
@@ -30,7 +30,7 @@ view_screen_t scr_setting = {
 
 /* Render setting screen content onto the OLED display buffer */
 // General function to draw a setting item (supports label, value, and selection pointer)
-static void drawSettingItem(int16_t y, const char* label, const char* value, bool is_selected)
+static void drawSettingItem(int16_t y, const char *label, const char *value, bool is_selected)
 {
   view_render.setCursor(15, y);
   view_render.print(label);
@@ -54,21 +54,21 @@ static void view_scr_setting()
   // Draw screen title
   view_render.setTextSize(1);
   view_render.setTextColor(WHITE);
-  view_render.setCursor(32, 2);
+  view_render.setCursor(15, 2);
   view_render.print("--- SETTINGS ---");
 
   // Row 1: DIFFICULTY at y = 16
-  const char* diff_str = (game_settings.difficulty == 0) ? "EASY" :
-                         (game_settings.difficulty == 1) ? "MEDIUM" : "HARD";
+  const char *diff_str = (game_settings.difficulty == 0) ? "EASY" : (game_settings.difficulty == 1) ? "MEDIUM"
+                                                                                                    : "HARD";
   drawSettingItem(16, "DIFFICULTY: ", diff_str, select_index == 0);
 
   // Row 2: SOUND at y = 27
-  const char* sound_str = (game_settings.sound_en == 1) ? "ON" : "OFF";
+  const char *sound_str = (game_settings.sound_en == 1) ? "ON" : "OFF";
   drawSettingItem(27, "SOUND:      ", sound_str, select_index == 1);
 
   // Row 3: TIME LIMIT at y = 38
-  const char* time_str = (game_settings.time_limit == 0) ? "30s" :
-                         (game_settings.time_limit == 1) ? "60s" : "90s";
+  const char *time_str = (game_settings.time_limit == 0) ? "30s" : (game_settings.time_limit == 1) ? "60s"
+                                                                                                   : "90s";
   drawSettingItem(38, "TIME LIMIT: ", time_str, select_index == 2);
 
   // Row 4: BACK TO MENU at y = 49

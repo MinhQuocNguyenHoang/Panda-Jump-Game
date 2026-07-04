@@ -61,7 +61,7 @@ union scr_menu_t
 static screen_t screen_menu;
 static scr_menu_t menu_chosse;
 
-static const uint8_t MENU_BOX_X[] = {7, 37, 67, 97};
+static const uint8_t MENU_BOX_X[] = {3, 34, 65, 96};
 
 /*****************************************************************************/
 /* View - Menu game */
@@ -102,34 +102,30 @@ static void view_scr_menu_game()
     if (i == screen_menu.location)
     {
       // Highlighted item: solid white background
-      view_render.fillRoundRect(bx, 16, 24, 24, 3, WHITE);
+      view_render.fillRoundRect(bx, 15, 28, 28, 4, WHITE);
     }
     else
     {
       // Unselected item: outline only
-      view_render.drawRoundRect(bx, 16, 24, 24, 3, WHITE);
+      view_render.drawRoundRect(bx, 15, 28, 28, 4, WHITE);
     }
 
-    // Draw the icon centered inside the 24x24 box
+    // Draw the icon centered inside the 28x28 box
     uint8_t iw = menu_items_icon_size_w[i];
     uint8_t ih = menu_items_icon_size_h[i];
-    uint8_t ix = bx + 12 - (iw / 2);
-    uint8_t iy = 16 + 12 - (ih / 2);
+    uint8_t ix = bx + 14 - (iw / 2);
+    uint8_t iy = 15 + 14 - (ih / 2);
 
     view_render.drawBitmap(ix, iy, menu_items_icon[i], iw, ih, menu_items_icon_color[i]);
   }
 
-  // Draw selected menu item name centered at Y=44
+  // Draw selected menu item name centered at Y=50
   view_render.setTextColor(WHITE);
   const char* name = menu_items_name[screen_menu.location];
   uint8_t name_len = strlen(name);
   uint8_t name_x = 64 - (name_len * 6) / 2;
-  view_render.setCursor(name_x, 44);
+  view_render.setCursor(name_x, 50);
   view_render.print(name);
-
-  // Draw bottom help text centered at Y=54
-  view_render.setCursor(4, 54);
-  view_render.print("UP/DN:Move  MODE:Ok");
 }
 
 /*****************************************************************************/
