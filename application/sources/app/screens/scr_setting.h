@@ -7,21 +7,21 @@
 #include "timer.h"
 #include "task_display.h"
 
-/* Cấu trúc lưu trữ cấu hình cài đặt của trò chơi */
+/* Struct to store game configuration settings */
 typedef struct
 {
   uint8_t difficulty; /* 0: EASY, 1: MEDIUM, 2: HARD */
-  uint8_t sound_en;   /* 0: OFF (Tắt), 1: ON (Bật âm thanh) */
+  uint8_t sound_en;   /* 0: OFF, 1: ON */
   uint8_t time_limit; /* 0: 30s, 1: 60s, 2: 90s */
 } game_settings_t;
 
-/* Khai báo biến cấu hình toàn cục để các màn hình khác có thể sử dụng bằng cách include file header này */
+/* Global configuration variable declaration so other screens can access by including this header */
 extern game_settings_t game_settings;
 
-/* Đối tượng màn hình Setting */
+/* Setting screen object */
 extern view_screen_t scr_setting;
 
-/* Hàm xử lý sự kiện của màn hình Setting */
+/* Event handler function (FSM) for Setting screen */
 extern void scr_setting_handle(ak_msg_t *msg);
 
 #endif //__SCR_SETTING_H__

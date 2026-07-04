@@ -234,7 +234,7 @@ void pj_arrow_display(arrow_t *arrow_t)
   view_render.drawBitmap(arrow_t->x, arrow_t->y, arrow, 10, 5, WHITE);
 }
 
-// Hàm vẽ biểu tượng Ngôi sao tính điểm (đặc trưng của game)
+// Function to draw score star icon (game specific)
 static void drawScoreStar(int16_t x, int16_t y)
 {
   view_render.drawPixel(x + 3, y, WHITE);
@@ -245,43 +245,43 @@ static void drawScoreStar(int16_t x, int16_t y)
   view_render.drawPixel(x + 5, y + 4, WHITE);
 }
 
-// Hàm vẽ biểu tượng Đồng hồ bấm giờ
+// Function to draw stopwatch/clock icon
 static void drawClockIcon(int16_t x, int16_t y)
 {
   view_render.drawCircle(x + 4, y + 4, 4, WHITE);
-  view_render.drawLine(x + 4, y + 4, x + 4, y + 2, WHITE); // Kim giờ
-  view_render.drawLine(x + 4, y + 4, x + 6, y + 4, WHITE); // Kim phút
+  view_render.drawLine(x + 4, y + 4, x + 4, y + 2, WHITE); // Hour hand
+  view_render.drawLine(x + 4, y + 4, x + 6, y + 4, WHITE); // Minute hand
 }
 
-// Hàm vẽ màn hình kết thúc game dùng chung (Hỗ trợ cả Thua cuộc và Chiến thắng)
+// Generic function to draw end-game screens (supports both Game Over and Victory)
 static void drawEndGameScreen(const char *title, bool is_victory)
 {
-  // 1. Vẽ khung viền bo góc ngoài cùng
+  // 1. Draw outer rounded border
   view_render.drawRoundRect(2, 4, 124, 56, 4, WHITE);
 
-  // 2. Vẽ thanh tiêu đề trắng đặc
+  // 2. Draw solid white title bar
   view_render.fillRect(4, 6, 120, 11, WHITE);
 
-  // 3. Vẽ Tiêu đề căn giữa chữ đen
+  // 3. Draw centered title in black text
   view_render.setTextSize(1);
   view_render.setTextColor(BLACK);
-  int16_t title_offset = (title[0] == 'V') ? 40 : 37; // Căn giữa cho "VICTORY!" hoặc "GAME OVER"
+  int16_t title_offset = (title[0] == 'V') ? 40 : 37; // Center offset for "VICTORY!" or "GAME OVER"
   view_render.setCursor(title_offset, 8);
   view_render.print(title);
-  view_render.setTextColor(WHITE); // Chuyển lại màu chữ trắng
+  view_render.setTextColor(WHITE); // Reset text color to white
 
-  // 4. Vẽ vạch chia dọc phân tách cột thông tin
-  // Màn hình win dùng vách ngăn lệch trái (x=52), màn hình thua dùng vách ngăn ở giữa (x=64)
+  // 4. Draw vertical divider to separate layout columns
+  // Win screen uses left-aligned divider (x=52), game over screen uses centered divider (x=64)
   view_render.drawFastVLine(is_victory ? 52 : 64, 20, 22, WHITE);
 
   if (is_victory)
   {
-    // --- Cột trái: Cúp và sao lấp lánh trang trí ---
+    // --- Left column: Trophy and sparkling stars decoration ---
     drawVectorTrophy(16, 23);
     drawSparkleStar(10, 28);
     drawSparkleStar(40, 28);
 
-    // --- Cột phải: Thông số chiến thắng ---
+    // --- Right column: Victory parameters ---
     view_render.setCursor(58, 22);
     view_render.print("YOU WIN!");
     view_render.setCursor(58, 33);
@@ -290,7 +290,7 @@ static void drawEndGameScreen(const char *title, bool is_victory)
   }
   else
   {
-    // --- Cột trái: Điểm số ---
+    // --- Left column: Scores ---
     uint8_t score_x_icon = (panda.score < 10) ? 24 : (panda.score < 100) ? 21
                                                                          : 18;
     uint8_t score_x_text = score_x_icon + 11;
@@ -298,7 +298,7 @@ static void drawEndGameScreen(const char *title, bool is_victory)
     view_render.setCursor(score_x_text, 23);
     view_render.print(panda.score);
 
-    // --- Cột phải: Thời gian sinh tồn thực tế ---
+    // --- Right column: Real survival time ---
     uint32_t seconds = panda.survival_time_ticks / 2;
     uint8_t time_x_icon = (seconds < 10) ? 83 : (seconds < 100) ? 80
                                                                 : 77;
@@ -309,7 +309,7 @@ static void drawEndGameScreen(const char *title, bool is_victory)
     view_render.print("s");
   }
 
-  // 5. Đường kẻ ngang bên dưới và Hướng dẫn phím bấm
+  // 5. Bottom horizontal divider and button input guide
   view_render.drawFastHLine(2, 45, 124, WHITE);
   view_render.setCursor(7, 49);
   view_render.print(is_victory ? "UP:Play  MODE:Exit" : "UP:Retry  MODE:Exit");
@@ -321,7 +321,7 @@ static void view_scr_panda_game()
 
   if (pj_game_state == GAME_PLAY)
   {
-    // Hiệu ứng lá rơi ngẫu nhiên sinh động
+    // Dynamic random falling leaves effect
     view_render.drawPixel((128 - (tick_count * 2)) % 138 - 10, 15, WHITE);
     view_render.drawPixel((128 - (tick_count * 3)) % 138 - 10, 35, WHITE);
     view_render.drawPixel((128 - (tick_count * 1)) % 138 - 10, 48, WHITE);

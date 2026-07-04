@@ -3,14 +3,14 @@
 #include "app_dbg.h"
 #include "buzzer.h"
 
-/* Định nghĩa và khởi tạo biến cấu hình toàn cục */
+/* Global configuration variable definition and initialization */
 game_settings_t game_settings = {
-    .difficulty = 1,  /* Mặc định độ khó là MEDIUM (1) */
-    .sound_en = 0,    /* Mặc định tắt âm thanh (0) */
-    .time_limit = 1   /* Mặc định thời gian là 60s (1) */
+    .difficulty = 1,  /* Default difficulty is MEDIUM (1) */
+    .sound_en = 0,    /* Default sound is OFF (0) */
+    .time_limit = 1   /* Default time limit is 60s (1) */
 };
 
-/* Vị trí dòng được chọn hiện hành: 0 = Difficulty, 1 = Sound, 2 = Back */
+/* Position of current selected index: 0 = Difficulty, 1 = Sound, 2 = Time Limit, 3 = Back */
 static uint8_t select_index = 0;
 
 static void view_scr_setting();
@@ -28,8 +28,8 @@ view_screen_t scr_setting = {
     .focus_item = 0,
 };
 
-/* Hàm vẽ nội dung màn hình Cài đặt lên buffer hiển thị OLED */
-// Hàm vẽ một dòng Cài đặt tổng quát (hỗ trợ in nhãn, in giá trị và vẽ con trỏ chọn)
+/* Render setting screen content onto the OLED display buffer */
+// General function to draw a setting item (supports label, value, and selection pointer)
 static void drawSettingItem(int16_t y, const char* label, const char* value, bool is_selected)
 {
   view_render.setCursor(15, y);
@@ -39,7 +39,7 @@ static void drawSettingItem(int16_t y, const char* label, const char* value, boo
     view_render.print(value);
   }
 
-  // Vẽ con trỏ chỉ mục nếu dòng này đang được chọn
+  // Draw selection pointer if this item is selected
   if (is_selected)
   {
     view_render.setCursor(5, y);
@@ -51,31 +51,31 @@ static void view_scr_setting()
 {
   view_render.clear();
 
-  // Vẽ tiêu đề màn hình
+  // Draw screen title
   view_render.setTextSize(1);
   view_render.setTextColor(WHITE);
   view_render.setCursor(32, 2);
   view_render.print("--- SETTINGS ---");
 
-  // Hàng 1: DIFFICULTY (Độ khó) tại y = 16
+  // Row 1: DIFFICULTY at y = 16
   const char* diff_str = (game_settings.difficulty == 0) ? "EASY" :
                          (game_settings.difficulty == 1) ? "MEDIUM" : "HARD";
   drawSettingItem(16, "DIFFICULTY: ", diff_str, select_index == 0);
 
-  // Hàng 2: SOUND (Âm thanh) tại y = 27
+  // Row 2: SOUND at y = 27
   const char* sound_str = (game_settings.sound_en == 1) ? "ON" : "OFF";
   drawSettingItem(27, "SOUND:      ", sound_str, select_index == 1);
 
-  // Hàng 3: TIME LIMIT (Thời gian) tại y = 38
+  // Row 3: TIME LIMIT at y = 38
   const char* time_str = (game_settings.time_limit == 0) ? "30s" :
                          (game_settings.time_limit == 1) ? "60s" : "90s";
   drawSettingItem(38, "TIME LIMIT: ", time_str, select_index == 2);
 
-  // Hàng 4: BACK TO MENU (Quay lại) tại y = 49
+  // Row 4: BACK TO MENU at y = 49
   drawSettingItem(49, "BACK TO MENU", nullptr, select_index == 3);
 }
 
-/* Hàm xử lý sự kiện (FSM) cho màn hình Cài đặt */
+/* Event handler function (FSM) for Setting screen */
 void scr_setting_handle(ak_msg_t *msg)
 {
   switch (msg->sig)
@@ -83,7 +83,7 @@ void scr_setting_handle(ak_msg_t *msg)
   case SCREEN_ENTRY:
   {
     APP_DBG("[scr_setting] SCREEN_ENTRY - Reset index\n");
-    select_index = 0; // Bắt đầu từ dòng đầu tiên
+    select_index = 0; // Start from first item
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
   }
@@ -91,7 +91,7 @@ void scr_setting_handle(ak_msg_t *msg)
 
   case AC_DISPLAY_SHOW_IDLE:
   {
-    APP_DBG("[scr_setting] Timeout - Quay về màn hình chờ Idle\n");
+    APP_DBG("[scr_setting] Timeout - Return to Idle screen\n");
     timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
     SCREEN_TRAN(scr_idle_handle, &scr_idle);
   }
@@ -99,7 +99,7 @@ void scr_setting_handle(ak_msg_t *msg)
 
   case AC_DISPLAY_BUTON_UP_PRESSED:
   {
-    APP_DBG("[scr_setting] Nút UP nhấn\n");
+    APP_DBG("[scr_setting] UP button pressed\n");
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
 
@@ -109,7 +109,7 @@ void scr_setting_handle(ak_msg_t *msg)
     }
     else
     {
-      select_index = 3; // Xoay vòng về dòng cuối
+      select_index = 3; // Wrap around to the last item
     }
     if (game_settings.sound_en)
     {
@@ -120,7 +120,7 @@ void scr_setting_handle(ak_msg_t *msg)
 
   case AC_DISPLAY_BUTON_DOWN_PRESSED:
   {
-    APP_DBG("[scr_setting] Nút DOWN nhấn\n");
+    APP_DBG("[scr_setting] DOWN button pressed\n");
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
 
@@ -130,7 +130,7 @@ void scr_setting_handle(ak_msg_t *msg)
     }
     else
     {
-      select_index = 0; // Xoay vòng về dòng đầu
+      select_index = 0; // Wrap around to the first item
     }
 
     if (game_settings.sound_en)
@@ -142,14 +142,14 @@ void scr_setting_handle(ak_msg_t *msg)
 
   case AC_DISPLAY_BUTON_MODE_PRESSED:
   {
-    APP_DBG("[scr_setting] Nút MODE nhấn để tương tác\n");
+    APP_DBG("[scr_setting] MODE button pressed to interact\n");
     timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE,
               AC_DISPLAY_IDLE_INTERVAL, TIMER_ONE_SHOT);
 
     switch (select_index)
     {
     case 0:
-    { // Đổi Độ khó
+    { // Change Difficulty
       game_settings.difficulty = (game_settings.difficulty + 1) % 3;
       APP_DBG("[scr_setting] Difficulty set: %d\n", game_settings.difficulty);
       if (game_settings.sound_en)
@@ -160,7 +160,7 @@ void scr_setting_handle(ak_msg_t *msg)
     break;
 
     case 1:
-    { // Đổi Âm thanh
+    { // Change Sound
       game_settings.sound_en = !game_settings.sound_en;
       APP_DBG("[scr_setting] Sound set: %d\n", game_settings.sound_en);
       if (game_settings.sound_en)
@@ -171,7 +171,7 @@ void scr_setting_handle(ak_msg_t *msg)
     break;
 
     case 2:
-    { // Đổi Thời gian (Time Limit)
+    { // Change Time Limit
       game_settings.time_limit = (game_settings.time_limit + 1) % 3;
       APP_DBG("[scr_setting] Time limit set: %d\n", game_settings.time_limit);
       if (game_settings.sound_en)
@@ -182,8 +182,8 @@ void scr_setting_handle(ak_msg_t *msg)
     break;
 
     case 3:
-    { // Thoát về Menu
-      APP_DBG("[scr_setting] Chọn BACK - Thoát ra Menu chính\n");
+    { // Back to Menu
+      APP_DBG("[scr_setting] Selected BACK - Exit to main Menu\n");
       timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_IDLE);
       if (game_settings.sound_en)
       {

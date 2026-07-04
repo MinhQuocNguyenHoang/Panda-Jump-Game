@@ -24,7 +24,7 @@ typedef struct
     int16_t speed;
     bool direction; // true = down, false = up
     bool active;    // true = active, false = inactive/dead
-    bool side;      // true =  bên phải thân trúc, false = bên trái thân trúc
+    bool side;      // true = right side of the bamboo, false = left side of the bamboo
     uint8_t explosion_ticks; // > 0 if the bug is currently exploding
 } bug_t;
 
