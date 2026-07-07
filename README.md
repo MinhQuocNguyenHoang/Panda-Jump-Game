@@ -19,8 +19,7 @@
 ## Gameplay Demo
 
 <div align="center">
-  <video src="
-  https://github.com/user-attachments/assets/5a945645-c364-4636-951e-c80039b7927a" controls width="480"></video>
+  <video src="https://github.com/user-attachments/assets/5a945645-c364-4636-951e-c80039b7927a" controls width="480"></video>
 </div>
 
 ## Documentation
