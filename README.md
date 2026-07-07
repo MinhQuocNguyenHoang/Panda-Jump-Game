@@ -262,7 +262,7 @@ make com dev=/dev/ttyUSB0
 
 ## Contact & Support
 
-<p style="font-size: 20px;"><strong>[Your Name]</strong> — Embedded Software Engineer</p>
+<p style="font-size: 20px;"><strong>Nguyen Hoang Minh Quoc</strong> — Firmware Engineer - Embedded system</p>
 
 ```Note
 Thank you for visiting this repository.
