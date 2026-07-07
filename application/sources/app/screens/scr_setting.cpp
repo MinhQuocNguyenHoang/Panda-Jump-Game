@@ -2,6 +2,7 @@
 #include "screens.h"
 #include "app_dbg.h"
 #include "buzzer.h"
+#include "app_eeprom.h"
 
 /* Global configuration variable definition and initialization */
 game_settings_t game_settings = {
@@ -195,6 +196,11 @@ void scr_setting_handle(ak_msg_t *msg)
 
     default:
       break;
+    }
+
+    if (select_index < 3)
+    {
+      panda_game_setting_write(&game_settings);
     }
   }
   break;

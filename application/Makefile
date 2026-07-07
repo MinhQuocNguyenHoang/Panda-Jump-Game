@@ -16,7 +16,7 @@ SOC_SRAM_BYTES = 16384	 # 16KB
 FLASH_BASE_ADDR_VAL = 0x08000000
 
 # Name of build target ex: ak-base-kit-stm32l151-application.bin
-NAME_MODULE = ak-base-kit-stm32l151-application
+NAME_MODULE = Panda_Jump-application
 PROJECT = $(NAME_MODULE)
 
 GCC_PATH			= $(HOME)/Tools/gcc-arm-none-eabi-10.3-2021.10

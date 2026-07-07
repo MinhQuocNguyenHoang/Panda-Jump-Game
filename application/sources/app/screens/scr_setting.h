@@ -7,13 +7,7 @@
 #include "timer.h"
 #include "task_display.h"
 
-/* Struct to store game configuration settings */
-typedef struct
-{
-  uint8_t difficulty; /* 0: EASY, 1: MEDIUM, 2: HARD */
-  uint8_t sound_en;   /* 0: OFF, 1: ON */
-  uint8_t time_limit; /* 0: 30s, 1: 60s, 2: 90s */
-} game_settings_t;
+#include "app_eeprom.h"
 
 /* Global configuration variable declaration so other screens can access by including this header */
 extern game_settings_t game_settings;

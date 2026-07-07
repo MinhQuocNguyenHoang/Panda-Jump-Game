@@ -26,6 +26,8 @@ view_screen_t scr_welcome = {
 
 void view_scr_welcome()
 {
+  // =========================================================================
+
   view_render.clear();
 
   view_render.drawBitmap(16, 0, bamboo, 8, 64, WHITE);

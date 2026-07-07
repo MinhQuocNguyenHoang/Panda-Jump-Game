@@ -1,4 +1,5 @@
 #include "scr_panda_game.h"
+#include "app_eeprom.h"
 
 uint8_t pj_game_state = GAME_OFF;
 
@@ -389,6 +390,13 @@ void ranking(uint32_t score)
     {
       top_scores[2] = score;
     }
+
+    // Write updated top scores to EEPROM
+    game_score_t score_data;
+    score_data.score_1st = top_scores[0];
+    score_data.score_2nd = top_scores[1];
+    score_data.score_3rd = top_scores[2];
+    panda_game_score_write(&score_data);
   }
 }
 

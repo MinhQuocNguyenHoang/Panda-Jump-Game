@@ -1,4 +1,5 @@
 #include "scr_startup.h"
+#include "app_eeprom.h"
 
 static void view_scr_startup();
 
@@ -45,6 +46,15 @@ void scr_startup_handle(ak_msg_t *msg)
 		APP_DBG_SIG("AC_DISPLAY_INITIAL\n");
 		view_render.initialize();
 		view_render_display_on();
+
+		// Load settings & scores from EEPROM
+		panda_game_setting_read(&game_settings);
+		game_score_t score_data;
+		panda_game_score_read(&score_data);
+		top_scores[0] = score_data.score_1st;
+		top_scores[1] = score_data.score_2nd;
+		top_scores[2] = score_data.score_3rd;
+
 		timer_set(AC_TASK_DISPLAY_ID, AC_DISPLAY_SHOW_LOGO, AC_DISPLAY_STARTUP_INTERVAL, TIMER_ONE_SHOT);
 	}
 	break;
