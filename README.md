@@ -215,7 +215,7 @@ If you do not want to install any compiler toolchains, you can directly upload t
 ##### 1. Flash the Binary
 Connect the board to your PC via USB, then run the `ak_flash` tool pointing to the pre-built binary:
 ```sh
-ak_flash /dev/ttyUSB0 resources/bin/ak-base-kit-stm32l151-application.bin 0x08003000
+ak_flash /dev/ttyUSB0 resources/bin/Panda_Jump-application.bin 0x08003000
 ```
 
 ---
@@ -234,7 +234,7 @@ Navigate to the `application/` directory and compile the program:
 cd application
 make
 ```
-*This will generate the build folder `build_ak-base-kit-stm32l151-application/` containing the compiled binary output `ak-base-kit-stm32l151-application.bin`.*
+*This will generate the build folder `build_Panda_Jump-application/` containing the compiled binary output `Panda_Jump-application.bin`.*
 
 ##### 3. Upload to the Board
 You can flash the binary directly through the kit's USB serial port using the `ak_flash` CLI tool:
