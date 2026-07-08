@@ -125,7 +125,7 @@ The **Main Menu** offers four options:
 | <img src="resources/images/bitmap/bamboo.jpg" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
 | <img src="resources/images/bitmap/boom.jpg" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only — no hitbox or area effect. |
 
-> **Note:** For detailed object runtime sequences, see [Game Object Sequences](docs/01-design-sequence-object.md).
+> **Note:** For detailed object runtime sequences, see [Game Object Sequences](docs/03-design-sequence-object.md).
 
 ---
 
@@ -143,7 +143,7 @@ The **Main Menu** offers four options:
 - **Difficulty:** Moving from Easy → Medium → Hard increases max simultaneous bugs (1→2→3), spawn probability per 100 ms tick (6%→12%→20%), and arrow speed range (1→1–2→2–3 px/tick).
 - **Victory condition:** Survive until the countdown reaches zero. The kit plays the *Merry Christmas* melody and shows a trophy animation with sparkling stars.
 - **Defeat condition:** Any arrow contact, or any non-stomp bug collision, triggers Game Over immediately with a `BANG` sound.
-- **Leaderboard:** Top-3 scores and configuration settings are persistently written to and loaded from the EEPROM. High scores and game settings persist across power resets, protected by magic-number validation and checksum verification (see [docs/03-eeprom-data-storage.md](docs/03-eeprom-data-storage.md)).
+- **Leaderboard:** Top-3 scores and configuration settings are persistently written to and loaded from the EEPROM. High scores and game settings persist across power resets, protected by magic-number validation and checksum verification (see [docs/05-eeprom-data-storage.md](docs/05-eeprom-data-storage.md)).
 - **Screen saver:** After 15 s of inactivity on any menu screen, the display transitions to a bouncing-bubble animation to protect the OLED panel from burn-in.
 
 <table align="center">
@@ -160,49 +160,110 @@ The **Main Menu** offers four options:
 </table>
 <p align="center"><strong><em>Figure 6:</em></strong> Game Over screen — final score and survival time displayed</p>
 
----
-
-### IV. Software Architecture
-
-The game is split into four independent AK Tasks. The diagram below shows the **static structure** — which tasks exist and which signals wire them together:
-
-```mermaid
-graph TD
-    HW["Button IRQ (10ms poll)"]
-    HW -->|"UP / DOWN / MODE signals"| D
-
-    T["100ms Periodic Timer\nAC_DISPLAY_PANDA_GAME_UPDATE"]
-    T --> D
-
-    D["AC_TASK_DISPLAY_ID\nScreen FSM · Collision check · OLED render"]
-
-    D -->|"SETUP · JUMP_LEFT/RIGHT · UP/DOWN"| P
-    D -->|"SETUP · UPDATE"| B
-    D -->|"SETUP · UPDATE"| A
-
-    P["PJ_PANDA_GAME_ID\nlane / side / y · score · survival_ticks"]
-    B["PJ_BUG_GAME_ID\nspawn · crawl · explosion_ticks"]
-    A["PJ_ARROW_GAME_ID\nspawn · fly · deactivate"]
-```
-
----
-
-### V. Basic Game Sequence Logic
+### IV. Basic Game Sequence Logic
 
 The diagram below shows the **runtime flow** — the time-ordered sequence of messages and actions that occur during a single 100 ms game-loop tick, from the timer firing all the way through to the OLED frame being rendered.
 
-> **Note:** For a more detailed sequence flow, see [Runtime Signal Processing](docs/02-design-sequence-runtime.md).
+> **Note:** For a more detailed sequence flow, see [Runtime Signal Processing](docs/04-design-sequence-runtime.md).
 
-<table align="center">
-  <tr>
-    <td align="center"><img src="resources/images/design-sequence/pj_game_sequence_logic.png" alt="Panda Jump basic game sequence logic" width="1000"/></td>
-  </tr>
-</table>
+```mermaid
+%%{init: {'theme':'dark', 'sequence': {'actorMargin': 50, 'noteMargin': 10}}}%%
+sequenceDiagram
+    autonumber
+    actor Player
+    participant AK as AK
+    participant Scr as Screen
+    participant Pnd as Panda
+    participant Bug as Bug
+    participant Arr as Arrow
+
+    rect rgb(20, 40, 20)
+        Note left of Player: SCREEN_ENTRY
+        AK->>Scr: SCREEN_ENTRY
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_GAME_SETUP
+        Scr->>Bug: PJ_BUG_GAME_SETUP
+        Scr->>Arr: PJ_ARROW_GAME_SETUP
+        Scr->>Scr: STATE (GAME_PLAY)
+        Scr->>Scr: Setup timer - Time tick
+        deactivate Scr
+    end
+
+    rect rgb(40, 20, 40)
+        Note left of Player: GAME PLAY
+        Note left of Player: Normal
+        AK->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+        activate Scr
+        Scr->>Bug: PJ_BUG_GAME_UPDATE
+        Scr->>Arr: PJ_ARROW_GAME_UPDATE
+        Scr->>Scr: check_game_time_limit()
+        Scr->>Scr: check_bug_collisions()
+        Scr->>Scr: check_arrow_collisions()
+        deactivate Scr
+
+        Note left of Player: Action
+        Player->>AK: Button [UP]
+        AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_JUMP_RIGHT
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+
+        Player->>AK: Button [DOWN]
+        AK->>Scr: AC_DISPLAY_BUTTON_DOWN_PRESSED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_JUMP_LEFT
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+
+        Player->>AK: Button [MODE] release
+        AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_GAME_UP
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+
+        Player->>AK: Button [MODE] long release
+        AK->>Scr: AC_DISPLAY_BUTTON_MODE_LONG_RELEASED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_GAME_DOWN
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+    end
+
+    rect rgb(20, 40, 60)
+        Note left of Player: RESET GAME
+        Note over Scr: (Triggered if CRASH or WIN)
+        Scr->>Scr: Save Score to EEPROM
+        Scr->>Scr: STATE (GAME_OVER)
+        Scr->>Scr: BUZZER_PlaySound()
+        
+        Player->>AK: Button [UP]
+        AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
+        activate Scr
+        Scr->>Scr: STATE (GAME_PLAY)
+        Scr->>Pnd: PJ_PANDA_GAME_SETUP
+        Scr->>Bug: PJ_BUG_GAME_SETUP
+        Scr->>Arr: PJ_ARROW_GAME_SETUP
+        deactivate Scr
+    end
+
+    rect rgb(60, 20, 20)
+        Note left of Player: EXIT
+        Player->>AK: Button [MODE] release
+        AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
+        activate Scr
+        Scr->>Scr: Remove timer - Time tick
+        Scr->>Scr: STATE (GAME_OFF)
+        Scr->>Scr: SCREEN_TRAN(scr_menu_game)
+        deactivate Scr
+    end
+```
 <p align="center"><strong><em>Figure 7:</em></strong> Basic game sequence logic</p>
 
 ---
 
-### VI. How to Run, Build & Flash
+### V. How to Run, Build & Flash
 
 You can choose either of the two methods below to load and run the game on your board:
 
