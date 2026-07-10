@@ -46,6 +46,7 @@
 #include "buzzer.h"
 
 #include "qrcode.h"
+#include "screens_bitmap.h"
 
 /*****************************************************************************/
 /*  local declare
@@ -586,6 +587,72 @@ int32_t shell_lcd(uint8_t* argv) {
 
 	case 'd':
 		shell_lcd_dump_framebuffer();
+		break;
+
+	case 's': {
+		/* lcd s <name> — vẽ 1 sprite object lên LCD (căn giữa màn hình)
+		 * Sau đó dùng "lcd d" để dump framebuffer ra.
+		 * Ví dụ: lcd s panda_right
+		 */
+		uint8_t sprite_len = str_parser((char*)argv);
+		if (sprite_len < 3) {
+			LOGIN_PRINT("[SPRITE LIST]\n");
+			LOGIN_PRINT("  panda_right      (16x16)\n");
+			LOGIN_PRINT("  panda_left       (16x16)\n");
+			LOGIN_PRINT("  bug_right        (8x10)\n");
+			LOGIN_PRINT("  bug_left         (8x10)\n");
+			LOGIN_PRINT("  bug_right_down   (8x8)\n");
+			LOGIN_PRINT("  bug_left_down    (8x8)\n");
+			LOGIN_PRINT("  arrow            (10x5)\n");
+			LOGIN_PRINT("  boom             (16x10)\n");
+			LOGIN_PRINT("  bamboo           (8x64)\n");
+			LOGIN_PRINT("  bamboo_leaf_left (16x16)\n");
+			LOGIN_PRINT("  bamboo_leaf_right(16x16)\n");
+			LOGIN_PRINT("  panda_icon       (15x15)\n");
+			LOGIN_PRINT("  chart_icon       (17x16)\n");
+			LOGIN_PRINT("  setting_icon     (16x16)\n");
+			LOGIN_PRINT("  exit_icon        (16x16)\n");
+			LOGIN_PRINT("Usage: lcd s <name>\n");
+			break;
+		}
+
+		char* sprite_name = str_parser_get_attr(2);
+		const unsigned char* bmp  = NULL;
+		uint8_t bmp_w = 0, bmp_h = 0;
+
+		if      (strcmp(sprite_name, "panda_right")       == 0) { bmp = panda_right;       bmp_w = 16; bmp_h = 16; }
+		else if (strcmp(sprite_name, "panda_left")        == 0) { bmp = panda_left;        bmp_w = 16; bmp_h = 16; }
+		else if (strcmp(sprite_name, "bug_right")         == 0) { bmp = bug_right;         bmp_w = 8;  bmp_h = 10; }
+		else if (strcmp(sprite_name, "bug_left")          == 0) { bmp = bug_left;          bmp_w = 8;  bmp_h = 10; }
+		else if (strcmp(sprite_name, "bug_right_down")    == 0) { bmp = bug_right_down;    bmp_w = 8;  bmp_h = 8;  }
+		else if (strcmp(sprite_name, "bug_left_down")     == 0) { bmp = bug_left_down;     bmp_w = 8;  bmp_h = 8;  }
+		else if (strcmp(sprite_name, "arrow")             == 0) { bmp = arrow;             bmp_w = 10; bmp_h = 5;  }
+		else if (strcmp(sprite_name, "boom")              == 0) { bmp = boom;              bmp_w = 16; bmp_h = 10; }
+		else if (strcmp(sprite_name, "bamboo")            == 0) { bmp = bamboo;            bmp_w = 8;  bmp_h = 64; }
+		else if (strcmp(sprite_name, "bamboo_leaf_left")  == 0) { bmp = bamboo_leaf_left;  bmp_w = 16; bmp_h = 16; }
+		else if (strcmp(sprite_name, "bamboo_leaf_right") == 0) { bmp = bamboo_leaf_right; bmp_w = 16; bmp_h = 16; }
+		else if (strcmp(sprite_name, "panda_icon")        == 0) { bmp = panda_icon;        bmp_w = 15; bmp_h = 15; }
+		else if (strcmp(sprite_name, "chart_icon")        == 0) { bmp = chart_icon;        bmp_w = 17; bmp_h = 16; }
+		else if (strcmp(sprite_name, "setting_icon")      == 0) { bmp = setting_icon;      bmp_w = 16; bmp_h = 16; }
+		else if (strcmp(sprite_name, "exit_icon")         == 0) { bmp = exit_icon;         bmp_w = 16; bmp_h = 16; }
+
+		if (bmp == NULL) {
+			LOGIN_PRINT("unknown sprite: %s\n", sprite_name);
+			break;
+		}
+
+		/* Căn giữa màn hình 128x64 */
+		int16_t x = (128 - bmp_w) / 2;
+		int16_t y = (64  - bmp_h) / 2;
+
+		view_render.fillScreen(BLACK);
+		view_render.drawBitmap(x, y, bmp, bmp_w, bmp_h, WHITE);
+		view_render.update();
+
+		LOGIN_PRINT("sprite [%s] drawn at (%d,%d) size %dx%d\n",
+				sprite_name, x, y, bmp_w, bmp_h);
+		LOGIN_PRINT("-> use \"lcd d\" to dump framebuffer\n");
+	}
 		break;
 
 	default:
