@@ -119,9 +119,9 @@ The **Main Menu** offers four options:
 
 | Bitmap | Object Name | Description |
 | :---: | :--- | :--- |
-| <img src="resources/images/bitmap/panda.gif" width="90"/> | **Panda** | The player character. Grips the left or right face of one of three bamboo trunks (`lane` 0–2, `side` 0–1). Climbs vertically with **[Mode]**; jumps lanes and swaps sides with **[Up]** / **[Down]**. |
-| <img src="resources/images/bitmap/bug.gif" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above → explosion + score. Touched from the side or below → Game Over. |
-| <img src="resources/images/bitmap/arrow.gif" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda → instant Game Over. |
+| <img src="resources/images/bitmap/panda.jpg" width="90"/> | **Panda** | The player character. Grips the left or right face of one of three bamboo trunks (`lane` 0–2, `side` 0–1). Climbs vertically with **[Mode]**; jumps lanes and swaps sides with **[Up]** / **[Down]**. |
+| <img src="resources/images/bitmap/bug.jpg" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above → explosion + score. Touched from the side or below → Game Over. |
+| <img src="resources/images/bitmap/arrow.jpg" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda → instant Game Over. |
 | <img src="resources/images/bitmap/bamboo.jpg" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
 | <img src="resources/images/bitmap/boom.jpg" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only — no hitbox or area effect. |
 
