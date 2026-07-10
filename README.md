@@ -97,7 +97,7 @@ When powered on, the kit walks through: **Startup (AK Logo)** → **QR Code** (p
 
 <table align="center">
   <tr>
-    <td align="center"><img src="resources/images/screens/scr_menugame.jpg" alt="Panda Jump menu" width="480"/></td>
+    <td align="center"><img src="resources/images/screens/scr_menugame.png" alt="Panda Jump menu" width="480"/></td>
   </tr>
 </table>
 <p align="center"><strong><em>Figure 3:</em></strong> Main Menu screen</p>
@@ -110,7 +110,7 @@ The **Main Menu** offers four options:
 
 <table align="center">
   <tr>
-    <td align="center"><img src="resources/images/screens/scr_gameplay.jpg" alt="Panda Jump gameplay" width="600"/></td>
+    <td align="center"><img src="resources/images/screens/scr_gameplay.png" alt="Panda Jump gameplay" width="600"/></td>
   </tr>
 </table>
 <p align="center"><strong><em>Figure 4:</em></strong> Gameplay screen</p>
@@ -119,11 +119,11 @@ The **Main Menu** offers four options:
 
 | Bitmap | Object Name | Description |
 | :---: | :--- | :--- |
-| <img src="resources/images/bitmap/panda.jpg" width="90"/> | **Panda** | The player character. Grips the left or right face of one of three bamboo trunks (`lane` 0–2, `side` 0–1). Climbs vertically with **[Mode]**; jumps lanes and swaps sides with **[Up]** / **[Down]**. |
-| <img src="resources/images/bitmap/bug.jpg" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above → explosion + score. Touched from the side or below → Game Over. |
-| <img src="resources/images/bitmap/arrow.jpg" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda → instant Game Over. |
-| <img src="resources/images/bitmap/bamboo.jpg" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
-| <img src="resources/images/bitmap/boom.jpg" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only — no hitbox or area effect. |
+| <img src="resources/images/bitmap/panda.gif" width="90"/> | **Panda** | The player character. Grips the left or right face of one of three bamboo trunks (`lane` 0–2, `side` 0–1). Climbs vertically with **[Mode]**; jumps lanes and swaps sides with **[Up]** / **[Down]**. |
+| <img src="resources/images/bitmap/bug.gif" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above → explosion + score. Touched from the side or below → Game Over. |
+| <img src="resources/images/bitmap/arrow.gif" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda → instant Game Over. |
+| <img src="resources/images/bitmap/bamboo.png" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
+| <img src="resources/images/bitmap/boom.gif" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only — no hitbox or area effect. |
 
 > **Note:** For detailed object runtime sequences, see [Game Object Sequences](docs/03-design-sequence-object.md).
 
@@ -148,14 +148,14 @@ The **Main Menu** offers four options:
 
 <table align="center">
   <tr>
-    <td align="center"><img src="resources/images/screens/scr_victory.jpg" alt="Victory screen" width="480"/></td>
+    <td align="center"><img src="resources/images/screens/scr_victory.png" alt="Victory screen" width="480"/></td>
   </tr>
 </table>
 <p align="center"><strong><em>Figure 5:</em></strong> Victory screen — survive the countdown to win</p>
 
 <table align="center">
   <tr>
-    <td align="center"><img src="resources/images/screens/scr_gameover.jpg" alt="Game Over screen" width="480"/></td>
+    <td align="center"><img src="resources/images/screens/scr_gameover.png" alt="Game Over screen" width="480"/></td>
   </tr>
 </table>
 <p align="center"><strong><em>Figure 6:</em></strong> Game Over screen — final score and survival time displayed</p>
