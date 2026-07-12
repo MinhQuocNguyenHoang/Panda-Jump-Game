@@ -13,7 +13,7 @@
 #include "task_display.h"
 #include "task_list.h"
 #include "scr_setting.h"
-#include "PJ_panda_game.h"
+#include "pj_panda_game.h"
 
 #define MAX_BUGS (5)
 
@@ -22,9 +22,9 @@ typedef struct
     int16_t x;
     int16_t y;
     int16_t speed;
-    bool direction; // true = down, false = up
-    bool active;    // true = active, false = inactive/dead
-    bool side;      // true = right side of the bamboo, false = left side of the bamboo
+    bool direction;          // true = down, false = up
+    bool active;             // true = active, false = inactive/dead
+    bool side;               // true = right side of the bamboo, false = left side of the bamboo
     uint8_t explosion_ticks; // > 0 if the bug is currently exploding
 } bug_t;
 

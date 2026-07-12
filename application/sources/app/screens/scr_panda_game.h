@@ -14,9 +14,9 @@
 
 #include "buzzer.h"
 
-#include "PJ_panda_game.h"
-#include "PJ_bug_game.h"
-#include "PJ_arrow_game.h"
+#include "pj_panda_game.h"
+#include "pj_bug_game.h"
+#include "pj_arrow_game.h"
 #include "screens.h"
 #include "screens_bitmap.h"
 #include "scr_setting.h"

@@ -1,4 +1,4 @@
-#include "PJ_bug_game.h"
+#include "pj_bug_game.h"
 #include <stdlib.h>
 
 bug_t bugs[MAX_BUGS];

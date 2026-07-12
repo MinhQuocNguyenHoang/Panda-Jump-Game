@@ -45,10 +45,10 @@ static void drawSparkleStar(int16_t x, int16_t y)
 }
 
 // General function to draw a podium column (supports auto-centering text and score)
-static void drawPodiumColumn(int16_t x, int16_t y, int16_t w, int16_t h, const char* rank_label, uint32_t score, bool is_first_place)
+static void drawPodiumColumn(int16_t x, int16_t y, int16_t w, int16_t h, const char *rank_label, uint32_t score, bool is_first_place)
 {
     int16_t center_x = x + w / 2;
-    
+
     // Draw podium (1st place is solid white, other ranks are outline only)
     if (is_first_place)
     {
@@ -60,14 +60,15 @@ static void drawPodiumColumn(int16_t x, int16_t y, int16_t w, int16_t h, const c
         view_render.drawRoundRect(x, y, w, h, 2, WHITE);
         view_render.setTextColor(WHITE); // White text on black background
     }
-    
+
     // Print rank label (1st, 2nd, 3rd) in the center of the column
     view_render.setCursor(center_x - 8, y + (h - 7) / 2);
     view_render.print(rank_label);
-    
+
     // Print centered score above the top of the column
     view_render.setTextColor(WHITE);
-    int16_t offset = (score >= 100) ? 9 : (score >= 10) ? 6 : 3;
+    int16_t offset = (score >= 100) ? 9 : (score >= 10) ? 6
+                                                        : 3;
     view_render.setCursor(center_x - offset, y - 10);
     view_render.print(score);
 }
@@ -75,29 +76,29 @@ static void drawPodiumColumn(int16_t x, int16_t y, int16_t w, int16_t h, const c
 void view_scr_chart()
 {
     view_render.clear();
-    
-    // 1. Draw outer single-line rounded border enclosing the screen
+
+    // Draw outer single-line rounded border enclosing the screen
     view_render.drawRoundRect(0, 0, 128, 64, 3, WHITE);
-    
-    // 2. Draw Header combined with the existing game icons
+
+    // Draw Header combined with the existing game icons
     view_render.drawBitmap(4, 3, panda_icon, 15, 15, WHITE);
     view_render.drawBitmap(107, 2, chart_icon, 17, 16, WHITE);
-    
+
     // Print centered title text
     view_render.setTextSize(1);
     view_render.setTextColor(WHITE);
     view_render.setCursor(31, 7);
     view_render.print("LEADERBOARD");
-    
+
     // Horizontal divider line below the header at y = 19
     view_render.drawFastHLine(3, 19, 122, WHITE);
-    
-    // 3. Draw the 3 podium columns using the generic helper function
+
+    // Draw the 3 podium columns using the generic helper function
     drawPodiumColumn(14, 48, 28, 13, "2nd", top_scores[1], false); // 2nd Place
-    drawPodiumColumn(86, 52, 28, 9,  "3rd", top_scores[2], false); // 3rd Place
+    drawPodiumColumn(86, 52, 28, 9, "3rd", top_scores[2], false);  // 3rd Place
     drawPodiumColumn(50, 42, 28, 19, "1st", top_scores[0], true);  // 1st Place (Special)
-    
-    // 4. Draw decorative details for 1st Place (Crown and sparkling stars)
+
+    // Draw decorative details for 1st Place (Crown and sparkling stars)
     drawCrown(59, 23);
     drawSparkleStar(42, 25);
     drawSparkleStar(85, 25);

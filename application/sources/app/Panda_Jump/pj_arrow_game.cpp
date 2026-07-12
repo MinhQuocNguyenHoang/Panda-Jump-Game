@@ -1,4 +1,4 @@
-#include "PJ_arrow_game.h"
+#include "pj_arrow_game.h"
 
 arrow_t arrows[MAX_ARROWS];
 void spawn_arrow(arrow_t *arrow, int16_t x, int16_t y, int16_t speed)

@@ -251,7 +251,7 @@ sequenceDiagram
         Scr->>Arr: PJ_ARROW_GAME_SETUP
         deactivate Scr
     end
-
+    
     rect rgb(60, 20, 20)
         Note left of Player: EXIT
         Player->>AK: Button [MODE] release
@@ -337,7 +337,4 @@ If you have any questions or feedback about the game design or firmware, feel fr
 </a>
 <a href="https://www.linkedin.com/in/minhquoc-hcmus">
   <img src="https://img.shields.io/badge/MinhQuocNguyenHoang-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
-</a>
-<a href="quoc20053008@email.com">
-  <img src="https://img.shields.io/badge/MinhQuocNguyenHoang-EA4335?style=flat&logo=gmail&logoColor=white"/>
 </a>

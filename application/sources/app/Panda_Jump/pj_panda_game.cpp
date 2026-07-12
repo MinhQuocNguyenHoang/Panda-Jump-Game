@@ -1,4 +1,4 @@
-#include "PJ_panda_game.h"
+#include "pj_panda_game.h"
 #include "scr_panda_game.h"
 
 PJ_PANDA_t panda;
