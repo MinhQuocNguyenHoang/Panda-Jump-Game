@@ -15,7 +15,7 @@ SOC_FLASH_BYTES = 131072 # 128KB
 SOC_SRAM_BYTES = 16384	 # 16KB
 FLASH_BASE_ADDR_VAL = 0x08000000
 
-# Name of build target ex: ak-base-kit-stm32l151-application.bin
+# Name of build target ex: Panda_Jump-application.bin
 NAME_MODULE = Panda_Jump-application
 PROJECT = $(NAME_MODULE)
 
