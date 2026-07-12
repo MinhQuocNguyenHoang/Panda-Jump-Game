@@ -65,11 +65,12 @@ static void check_game_time_limit()
     if (panda.survival_time_ticks >= target_ticks)
     {
       ranking(panda.score);
-      pj_game_state = GAME_WIN;
       if (game_settings.sound_en)
       {
         BUZZER_PlaySound(BUZZER_SOUND_MERRY_CHRISTMAS);
       }
+      SCREEN_TRAN(scr_victory_handle, &scr_victory);
+      return;
     }
   }
 }
@@ -101,12 +102,12 @@ static void check_bug_collisions(uint8_t px, uint8_t py)
       else // Collision from below or level: Game Over!
       {
         ranking(panda.score);
-        pj_game_state = GAME_OVER;
         if (game_settings.sound_en)
         {
           BUZZER_PlaySound(BUZZER_SOUND_BANG);
         }
-        break;
+        SCREEN_TRAN(scr_game_over_handle, &scr_game_over);
+        return;
       }
     }
   }
@@ -118,13 +119,13 @@ static void check_arrow_collisions(uint8_t px, uint8_t py)
   {
     if (arrows[i].active && check_collision(px, py, arrows[i].x, arrows[i].y))
     {
-      pj_game_state = GAME_OVER;
       ranking(panda.score);
       if (game_settings.sound_en)
       {
         BUZZER_PlaySound(BUZZER_SOUND_BANG);
       }
-      break;
+      SCREEN_TRAN(scr_game_over_handle, &scr_game_over);
+      return;
     }
   }
 }
@@ -257,13 +258,13 @@ static void drawClockIcon(int16_t x, int16_t y)
 // Generic function to draw end-game screens (supports both Game Over and Victory)
 static void drawEndGameScreen(const char *title, bool is_victory)
 {
-  // 1. Draw outer rounded border
+  // Draw outer rounded border
   view_render.drawRoundRect(2, 4, 124, 56, 4, WHITE);
 
-  // 2. Draw solid white title bar
+  // Draw solid white title bar
   view_render.fillRect(4, 6, 120, 11, WHITE);
 
-  // 3. Draw centered title in black text
+  // Draw centered title in black text
   view_render.setTextSize(1);
   view_render.setTextColor(BLACK);
   int16_t title_offset = (title[0] == 'V') ? 40 : 37; // Center offset for "VICTORY!" or "GAME OVER"
@@ -271,7 +272,7 @@ static void drawEndGameScreen(const char *title, bool is_victory)
   view_render.print(title);
   view_render.setTextColor(WHITE); // Reset text color to white
 
-  // 4. Draw vertical divider to separate layout columns
+  // Draw vertical divider to separate layout columns
   // Win screen uses left-aligned divider (x=52), game over screen uses centered divider (x=64)
   view_render.drawFastVLine(is_victory ? 52 : 64, 20, 22, WHITE);
 
@@ -310,7 +311,7 @@ static void drawEndGameScreen(const char *title, bool is_victory)
     view_render.print("s");
   }
 
-  // 5. Bottom horizontal divider and button input guide
+  // Bottom horizontal divider and button input guide
   view_render.drawFastHLine(2, 45, 124, WHITE);
   view_render.setCursor(7, 49);
   view_render.print(is_victory ? "UP:Play  MODE:Exit" : "UP:Retry  MODE:Exit");
@@ -352,14 +353,6 @@ static void view_scr_panda_game()
         pj_arrow_display(&arrows[i]);
       }
     }
-  }
-  else if (pj_game_state == GAME_OVER)
-  {
-    drawEndGameScreen("GAME OVER", false);
-  }
-  else if (pj_game_state == GAME_WIN)
-  {
-    drawEndGameScreen("VICTORY!", true);
   }
 }
 
@@ -487,11 +480,6 @@ void scr_panda_game_handle(ak_msg_t *msg)
     if (pj_game_state == GAME_PLAY)
     {
       task_post_pure_msg(PJ_PANDA_GAME_ID, PJ_PANDA_GAME_UP);
-    }
-    else if (pj_game_state == GAME_OVER || pj_game_state == GAME_WIN)
-    {
-      timer_remove_attr(AC_TASK_DISPLAY_ID, AC_DISPLAY_PANDA_GAME_UPDATE);
-      SCREEN_TRAN(scr_menu_game_handle, &scr_menu_game);
     }
   }
   break;

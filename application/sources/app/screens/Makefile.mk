@@ -13,3 +13,5 @@ SOURCES_CPP += sources/app/screens/scr_menu_game.cpp
 SOURCES_CPP += sources/app/screens/scr_panda_game.cpp
 SOURCES_CPP += sources/app/screens/scr_setting.cpp
 SOURCES_CPP += sources/app/screens/scr_chart.cpp
+SOURCES_CPP += sources/app/screens/scr_game_over.cpp
+SOURCES_CPP += sources/app/screens/scr_victory.cpp

@@ -63,4 +63,16 @@ extern view_dynamic_t dyn_view_chart;
 extern view_screen_t scr_chart;
 extern void scr_chart_handle(ak_msg_t *msg);
 extern uint32_t top_scores[3];
+
+// scr_game_over
+extern view_dynamic_t dyn_view_game_over;
+extern view_screen_t scr_game_over;
+extern void scr_game_over_handle(ak_msg_t *msg);
+
+// scr_victory
+extern view_dynamic_t dyn_view_victory;
+extern view_screen_t scr_victory;
+extern void scr_victory_handle(ak_msg_t *msg);
+
 #endif //__SCREENS_H__
+
