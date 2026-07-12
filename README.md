@@ -27,6 +27,10 @@
 | File | Description |
 |---|---|
 | [README.md](README.md) | Project overview, hardware specs, game mechanics, and object descriptions. |
+| [docs/01-guide-getting-started.md](docs/01-guide-getting-started.md) | Guide to creating your fork, setting up the environment, and pushing code. |
+| [docs/02-design-sequence-object.md](docs/02-design-sequence-object.md) | Sequence logic for each game object (Panda, Bug, Arrow) and collision flow. |
+| [docs/03-design-sequence-runtime.md](docs/03-design-sequence-runtime.md) | Detailed runtime signal processing and interaction sequences. |
+| [docs/04-eeprom-data-storage.md](docs/04-eeprom-data-storage.md) | Details on EEPROM memory map, checksum validation, and data persistence. |
 
 ## Introduction
 
@@ -125,7 +129,7 @@ The **Main Menu** offers four options:
 | <img src="resources/images/bitmap/bamboo.png" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
 | <img src="resources/images/bitmap/boom.gif" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only — no hitbox or area effect. |
 
-> **Note:** For detailed object runtime sequences, see [Game Object Sequences](docs/03-design-sequence-object.md).
+> **Note:** For detailed object runtime sequences, see [Game Object Sequences](docs/02-design-sequence-object.md).
 
 ---
 
@@ -143,7 +147,7 @@ The **Main Menu** offers four options:
 - **Difficulty:** Moving from Easy → Medium → Hard increases max simultaneous bugs (1→2→3), spawn probability per 100 ms tick (6%→12%→20%), and arrow speed range (1→1–2→2–3 px/tick).
 - **Victory condition:** Survive until the countdown reaches zero. The kit plays the *Merry Christmas* melody and shows a trophy animation with sparkling stars.
 - **Defeat condition:** Any arrow contact, or any non-stomp bug collision, triggers Game Over immediately with a `BANG` sound.
-- **Leaderboard:** Top-3 scores and configuration settings are persistently written to and loaded from the EEPROM. High scores and game settings persist across power resets, protected by magic-number validation and checksum verification (see [docs/05-eeprom-data-storage.md](docs/05-eeprom-data-storage.md)).
+- **Leaderboard:** Top-3 scores and configuration settings are persistently written to and loaded from the EEPROM. High scores and game settings persist across power resets, protected by magic-number validation and checksum verification (see [docs/04-eeprom-data-storage.md](docs/04-eeprom-data-storage.md)).
 - **Screen saver:** After 15 s of inactivity on any menu screen, the display transitions to a bouncing-bubble animation to protect the OLED panel from burn-in.
 
 <table align="center">
@@ -164,7 +168,7 @@ The **Main Menu** offers four options:
 
 The diagram below shows the **runtime flow** — the time-ordered sequence of messages and actions that occur during a single 100 ms game-loop tick, from the timer firing all the way through to the OLED frame being rendered.
 
-> **Note:** For a more detailed sequence flow, see [Runtime Signal Processing](docs/04-design-sequence-runtime.md).
+> **Note:** For a more detailed sequence flow, see [Runtime Signal Processing](docs/03-design-sequence-runtime.md).
 
 ```mermaid
 %%{init: {'theme':'dark', 'sequence': {'actorMargin': 50, 'noteMargin': 10}}}%%
