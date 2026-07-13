@@ -1,6 +1,6 @@
 #include "scr_victory.h"
 #include "scr_panda_game.h"
-#include "PJ_panda_game.h"
+#include "pj_panda_game.h"
 #include "buzzer.h"
 
 static void view_scr_victory();
@@ -26,6 +26,24 @@ static void drawSparkleStar(int16_t x, int16_t y)
   view_render.drawPixel(x + 2, y + 4, WHITE);
 }
 
+static void drawVectorTrophy(int16_t x, int16_t y)
+{
+  // Bowl
+  view_render.drawTriangle(x + 2, y, x + 18, y, x + 10, y + 12, WHITE);
+  view_render.fillTriangle(x + 4, y + 1, x + 16, y + 1, x + 10, y + 10, WHITE);
+
+  // Handles
+  view_render.drawCircle(x + 2, y + 4, 3, WHITE);
+  view_render.drawCircle(x + 18, y + 4, 3, WHITE);
+
+  // Stem
+  view_render.drawFastVLine(x + 10, y + 10, 6, WHITE);
+  view_render.drawFastVLine(x + 9, y + 10, 6, WHITE);
+  view_render.drawFastVLine(x + 11, y + 10, 6, WHITE);
+
+  // Base
+  view_render.fillRect(x + 5, y + 16, 11, 4, WHITE);
+}
 static void view_scr_victory()
 {
   view_render.clear();
@@ -38,6 +56,7 @@ static void view_scr_victory()
   view_render.setTextColor(WHITE);
   view_render.drawFastVLine(52, 20, 22, WHITE);
 
+  drawVectorTrophy(16, 23);
   drawSparkleStar(10, 28);
   drawSparkleStar(40, 28);
 
