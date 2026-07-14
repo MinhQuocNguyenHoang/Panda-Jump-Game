@@ -160,7 +160,7 @@ The Screen task (`scr_panda_game`) manages the global game state, time limits, a
 1. Posts `PJ_BUG_GAME_UPDATE` and `PJ_ARROW_GAME_UPDATE`.
 2. Evaluates the `survival_time_ticks` against the difficulty's time limit (e.g., 60s, 120s). If the limit is reached, it records the score, plays `BUZZER_SOUND_MERRY_CHRISTMAS`, and transitions to the **Victory screen**.
 3. Evaluates collisions using AABB bounding boxes (`check_collision`):
-    - **Bug Collision:** If the Panda collides with a Bug, it checks relative Y positions. If the Panda is above (`py < bug.y`), the Bug is stomped — its `explosion_ticks` is set, a Click sound is played, and the Panda receives bonus points. If the Panda is below or level, the Panda dies — plays a Bang sound, records score, and transitions to the **Game Over screen**.
+    - **Bug Collision:** If the Panda collides with a Bug, it checks relative Y positions. If the Panda is above (`py < bug.y`), the Bug is stomped, its `explosion_ticks` is set, a Click sound is played, and the Panda receives bonus points. If the Panda is below or level, the Panda dies plays a Bang sound, records score, and transitions to the **Game Over screen**.
     - **Arrow Collision:** Any overlap immediately transitions to the **Game Over screen**.
 
 ```mermaid

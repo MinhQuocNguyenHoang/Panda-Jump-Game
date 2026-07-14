@@ -8,7 +8,7 @@
 
 </div>
 
-# Panda Jump — Game built on AK Embedded Base Kit
+# Panda Jump-Game built on AK Embedded Base Kit
 
 <center>
 <img width="1200" height="600" alt="PANDA JUMP BANNER" src="resources/images/screens/PANDA-JUMP.gif" />
@@ -19,7 +19,7 @@
 ## Gameplay Demo
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/5a945645-c364-4636-951e-c80039b7927a" controls width="480"></video>
+  <video src="https://github.com/user-attachments/assets/15f762e3-c09b-4d8f-a86d-8436492189a4" controls width="480"></video>
 </div>
 
 ## Documentation
@@ -34,13 +34,13 @@
 
 ## Introduction
 
-Panda Jump is a **vertical time-attack climbing game** built on the **AK Embedded Base Kit**, powered by the **Active Kernel (AK)** event-driven framework. The player controls a panda gripping one of three bamboo trunks, dodging vertically-crawling bugs and horizontally-flying arrows — and must **survive long enough for the countdown to reach zero** to win.
+Panda Jump is a **vertical time-attack climbing game** built on the **AK Embedded Base Kit**, powered by the **Active Kernel (AK)** event-driven framework. The player controls a panda gripping one of three bamboo trunks, dodging vertically-crawling bugs and horizontally-flying arrows, and must **survive long enough for the countdown to reach zero** to win.
 
 What makes Panda Jump stand out in the AK game series:
 
 - **A win condition:** Unlike most AK games that end only on death, Panda Jump has a timer-based **victory state** alongside the Game Over state.
-- **Dual-axis threat system:** Bugs move vertically along bamboo trunks; arrows cut horizontally across all lanes — requiring the player to make two completely different spatial decisions simultaneously.
-- **Direction-aware stomp collision:** At the moment of bounding-box overlap between panda and bug, the game checks `panda.y < bug.y`. If true — the panda is above the bug — it is a stomp (score + explosion). Any other angle is a crash (Game Over).
+- **Dual-axis threat system:** Bugs move vertically along bamboo trunks; arrows cut horizontally across all lanes, requiring the player to make two completely different spatial decisions simultaneously.
+- **Direction-aware stomp collision:** At the moment of bounding-box overlap between panda and bug, the game checks `panda.y < bug.y`. If true-the panda is above the bug-it is a stomp (score + explosion). Any other angle is a crash (Game Over).
 - **Static memory discipline:** The entire game runs within 16 KB RAM using fixed-size entity pools (`MAX_BUGS = 5`, `MAX_ARROWS = 5`) with zero heap allocation.
 
 ### I. Hardware
@@ -54,7 +54,7 @@ What makes Panda Jump stand out in the AK game series:
 
 [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) is an evaluation kit for advanced embedded software learners.
 
-The kit integrates a **1.54" OLED LCD**, **3 push buttons**, and **a buzzer** capable of playing tonal sequences — everything needed to study event-driven systems through hands-on game design. It also exposes **RS485**, **Qwiic**, and **Grove** connectors for broader embedded prototyping.
+The kit integrates a **1.54" OLED LCD**, **3 push buttons**, and **a buzzer** capable of playing tonal sequences-everything needed to study event-driven systems through hands-on game design. It also exposes **RS485**, **Qwiic**, and **Grove** connectors for broader embedded prototyping.
 
 **MCU Overview:**
 
@@ -97,7 +97,7 @@ Flash Partitions Layout
 
 ### II. Game Description and Objects
 
-When powered on, the kit walks through: **Startup (AK Logo)** → **QR Code** (pointing to this repository) → **Welcome** — where a panda climbs the right bamboo, a bug crawls the left one, and an arrow flies across the screen as a live gameplay preview — then lands on the **Main Menu**.
+When powered on, the kit walks through: **Startup (AK Logo)** → **QR Code** (pointing to this repository) → **Welcome** - where a panda climbs the right bamboo, a bug crawls the left one, and an arrow flies across the screen as a live gameplay preview - then lands on the **Main Menu**.
 
 <table align="center">
   <tr>
@@ -127,7 +127,7 @@ The **Main Menu** offers four options:
 | <img src="resources/images/bitmap/bug.gif" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above → explosion + score. Touched from the side or below → Game Over. |
 | <img src="resources/images/bitmap/arrow.gif" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda → instant Game Over. |
 | <img src="resources/images/bitmap/bamboo.png" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
-| <img src="resources/images/bitmap/boom.gif" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only — no hitbox or area effect. |
+| <img src="resources/images/bitmap/boom.gif" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only-no hitbox or area effect. |
 
 > **Note:** For detailed object runtime sequences, see [Game Object Sequences](docs/02-design-sequence-object.md).
 
@@ -135,8 +135,8 @@ The **Main Menu** offers four options:
 
 ### III. How to Play
 
-- Press **[Up]** to jump right — swaps the panda to the other face of the same trunk, or leaps to the next trunk on the right.
-- Press **[Down]** to jump left — swaps face or leaps to the next trunk on the left.
+- Press **[Up]** to jump right-swaps the panda to the other face of the same trunk, or leaps to the next trunk on the right.
+- Press **[Down]** to jump left-swaps face or leaps to the next trunk on the left.
 - **Short-press [Mode]** to climb up 4 px; **long-press [Mode]** to slide down 4 px.
 - Stomp bugs from above to score. Avoid touching arrows or running into bugs from the side.
 - On Victory / Game Over screens: **[Up]** = Retry, **[Mode]** = Return to main menu.
@@ -155,18 +155,18 @@ The **Main Menu** offers four options:
     <td align="center"><img src="resources/images/screens/scr_victory.png" alt="Victory screen" width="480"/></td>
   </tr>
 </table>
-<p align="center"><strong><em>Figure 5:</em></strong> Victory screen — survive the countdown to win</p>
+<p align="center"><strong><em>Figure 5:</em></strong> Victory screen-survive the countdown to win</p>
 
 <table align="center">
   <tr>
     <td align="center"><img src="resources/images/screens/scr_gameover.png" alt="Game Over screen" width="480"/></td>
   </tr>
 </table>
-<p align="center"><strong><em>Figure 6:</em></strong> Game Over screen — final score and survival time displayed</p>
+<p align="center"><strong><em>Figure 6:</em></strong> Game Over screen-final score and survival time displayed</p>
 
 ### IV. Basic Game Sequence Logic
 
-The diagram below shows the **runtime flow** — the time-ordered sequence of messages and actions that occur during a single 100 ms game-loop tick, from the timer firing all the way through to the OLED frame being rendered.
+The diagram below shows the **runtime flow**-the time-ordered sequence of messages and actions that occur during a single 100 ms game-loop tick, from the timer firing all the way through to the OLED frame being rendered.
 
 > **Note:** For a more detailed sequence flow, see [Runtime Signal Processing](docs/03-design-sequence-runtime.md).
 
@@ -324,7 +324,7 @@ make com dev=/dev/ttyUSB0
 
 ## Contact & Support
 
-<p style="font-size: 20px;"><strong>Nguyen Hoang Minh Quoc</strong> — Firmware Engineer - Embedded system</p>
+<p style="font-size: 20px;"><strong>Nguyen Hoang Minh Quoc</strong> Firmware Engineer - Embedded system</p>
 
 ```Note
 Thank you for visiting this repository.

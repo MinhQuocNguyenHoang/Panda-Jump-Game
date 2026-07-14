@@ -43,7 +43,7 @@ You can also click the **Star** button next to **Fork** to support the author.
 > - Name the repository after **your game's name**.
 > - Add a brief description of your game in the **Description** field.
 
-Once the fork is created, GitHub redirects you to the new repository — this is the "skeleton" you will use to develop and complete your game:
+Once the fork is created, GitHub redirects you to the new repository-this is the "skeleton" you will use to develop and complete your game:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_repo_after_fork.png" />
@@ -55,7 +55,7 @@ Once the fork is created, GitHub redirects you to the new repository — this is
 
 To build the source code and flash firmware onto the kit, you need to set up the development environment on Ubuntu/Linux. Step-by-step instructions are available here:
 
-**[AK Embedded Base Kit STM32L151 — Getting Started](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-getting-started)**
+**[AK Embedded Base Kit STM32L151-Getting Started](https://epcb.vn/blogs/ak-embedded-software/ak-embedded-base-kit-stm32l151-getting-started)**
 
 ---
 
@@ -65,7 +65,7 @@ To build the source code and flash firmware onto the kit, you need to set up the
 
 ### Step 1: Create your working directory
 
-From your `Home` directory, create a folder named **Workspace** — this will hold all of your source code and programming tools. Inside `Workspace`, create two subdirectories: `Sources` and `Tools`.
+From your `Home` directory, create a folder named **Workspace**-this will hold all of your source code and programming tools. Inside `Workspace`, create two subdirectories: `Sources` and `Tools`.
 
 You can do this quickly by opening your Terminal and running the following commands:
 
@@ -116,49 +116,49 @@ All game logic lives in the `application/sources/app` directory.
 
 #### Example: Displaying the Chart screen in the Panda Jump game
 
-**Step 3.1 —** Create a header file `scr_chart.h` in the `screens/` directory to declare the functions that draw the Chart screen:
+**Step 3.1 ** Create a header file `scr_chart.h` in the `screens/` directory to declare the functions that draw the Chart screen:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_create_chart_header.png" />
 </p>
 
-**Step 3.2 —** Create `scr_chart.cpp` to handle the bitmap data and render the Chart graphics on the display:
+**Step 3.2 ** Create `scr_chart.cpp` to handle the bitmap data and render the Chart graphics on the display:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_create_chart_source.png" />
 </p>
 
-**Step 3.3 —** Create a header file `screens_bitmap.h` in the `screens/` directory to declare shared bitmap data:
+**Step 3.3 ** Create a header file `screens_bitmap.h` in the `screens/` directory to declare shared bitmap data:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_create_bitmap_header.png" />
 </p>
 
-**Step 3.4 —** Create `screens_bitmap.cpp` containing the Chart's bitmap data:
+**Step 3.4 ** Create `screens_bitmap.cpp` containing the Chart's bitmap data:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_create_bitmap_source.png" />
 </p>
 
-**Step 3.5 —** Include the Chart header file in `screens.h`:
+**Step 3.5 ** Include the Chart header file in `screens.h`:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_include_headers_in_screens.png" />
 </p>
 
-**Step 3.6 —** Update the `screen_tran_menu()` function inside `scr_menu_game.cpp` to transition to the Chart screen when the user selects the Charts menu item:
+**Step 3.6 ** Update the `screen_tran_menu()` function inside `scr_menu_game.cpp` to transition to the Chart screen when the user selects the Charts menu item:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_update_switch_case_in_scr_menu_game.png" />
 </p>
 
-**Step 3.7 —** Add the two files `scr_chart.cpp` and `screens_bitmap.cpp` to `Makefile.mk` inside the `screens/` directory so they get compiled:
+**Step 3.7 ** Add the two files `scr_chart.cpp` and `screens_bitmap.cpp` to `Makefile.mk` inside the `screens/` directory so they get compiled:
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_add_bitmap_and_chart_to_project.png" />
 </p>
 
-**Step 3.8 —** Build and flash the firmware onto the kit (see detailed instructions in [Section II](#ii-quick-start-guide-environment-setup)):
+**Step 3.8 ** Build and flash the firmware onto the kit (see detailed instructions in [Section II](#ii-quick-start-guide-environment-setup)):
 
 <p align="center">
   <img style="max-width: 100%; height: auto;" alt="repo-ak" src="../resources/images/guide-getting-started/getting_started_final_result.jpg" />
@@ -187,7 +187,7 @@ From here, anyone can visit your GitHub link to follow your progress and try out
 
 ## Contact & Support
 
-<p style="font-size: 20px;"><strong>Nguyen Hoang Minh Quoc</strong> — Firmware Engineer - Embedded system</p>
+<p style="font-size: 20px;"><strong>Nguyen Hoang Minh Quoc</strong>-Firmware Engineer - Embedded system</p>
 
 ``` Note
 Thank you for visiting this repository.
@@ -200,9 +200,6 @@ If you have any questions or feedback about the game design or firmware, feel fr
 </a>
 <a href="https://www.linkedin.com/in/minhquoc-hcmus">
   <img src="https://img.shields.io/badge/MinhQuocNguyenHoang-0A66C2?style=flat&logo=linkedin&logoColor=white"/>
-</a>
-<a href="mailto:quoc20053008@email.com">
-  <img src="https://img.shields.io/badge/MinhQuocNguyenHoang-EA4335?style=flat&logo=gmail&logoColor=white"/>
 </a>
 
 <p align="center">
