@@ -8,7 +8,7 @@
 
 </div>
 
-# Panda Jump-Game built on AK Embedded Base Kit
+# Panda Jump Game - built on AK Embedded Base Kit
 
 <center>
 <img width="1200" height="600" alt="PANDA JUMP BANNER" src="resources/images/screens/PANDA-JUMP.gif" />
@@ -40,7 +40,7 @@ What makes Panda Jump stand out in the AK game series:
 
 - **A win condition:** Unlike most AK games that end only on death, Panda Jump has a timer-based **victory state** alongside the Game Over state.
 - **Dual-axis threat system:** Bugs move vertically along bamboo trunks; arrows cut horizontally across all lanes, requiring the player to make two completely different spatial decisions simultaneously.
-- **Direction-aware stomp collision:** At the moment of bounding-box overlap between panda and bug, the game checks `panda.y < bug.y`. If true-the panda is above the bug-it is a stomp (score + explosion). Any other angle is a crash (Game Over).
+- **Direction-aware stomp collision:** At the moment of bounding-box overlap between panda and bug, the game checks `panda.y < bug.y`. If true-the panda is above the bug - it is a stomp (score + explosion). Any other angle is a crash (Game Over).
 - **Static memory discipline:** The entire game runs within 16 KB RAM using fixed-size entity pools (`MAX_BUGS = 5`, `MAX_ARROWS = 5`) with zero heap allocation.
 
 ### I. Hardware
