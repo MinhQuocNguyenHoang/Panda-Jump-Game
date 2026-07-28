@@ -1,6 +1,9 @@
 <div align="center">
 
-<!-- Dãy Badges tối giản -->
+<img src="https://komarev.com/ghpvc/?username=MinhQuocNguyenHoang&repo=Panda-Jump-Game&label=Repo+Traffic&color=blue&style=flat-square" alt="Repo Traffic"/>
+
+<br>
+
 <img src="https://img.shields.io/badge/language-C%2B%2B-brightgreen?style=flat-square&logo=c%2B%2B" alt="C++"/>
 <img src="https://img.shields.io/badge/mcu-STM32L151-green?style=flat-square" alt="STM32L151"/>
 <img src="https://img.shields.io/badge/framework-Active_Kernel-green?style=flat-square" alt="AK"/>
