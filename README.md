@@ -158,79 +158,87 @@ sequenceDiagram
     participant Bug as Bug
     participant Arr as Arrow
 
-    Note left of Player: SCREEN_ENTRY
-    AK->>Scr: SCREEN_ENTRY
-    activate Scr
-    Scr->>Pnd: PJ_PANDA_GAME_SETUP
-    Scr->>Bug: PJ_BUG_GAME_SETUP
-    Scr->>Arr: PJ_ARROW_GAME_SETUP
-    Scr->>Scr: STATE (GAME_PLAY)
-    Scr->>Scr: Setup timer - Time tick
-    deactivate Scr
+    rect rgb(30, 90, 60)
+        Note left of Player: SCREEN_ENTRY
+        AK->>Scr: SCREEN_ENTRY
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_GAME_SETUP
+        Scr->>Bug: PJ_BUG_GAME_SETUP
+        Scr->>Arr: PJ_ARROW_GAME_SETUP
+        Scr->>Scr: STATE (GAME_PLAY)
+        Scr->>Scr: Setup timer - Time tick
+        deactivate Scr
+    end
 
-    Note left of Player: GAME PLAY
-    Note left of Player: Normal
-    AK->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
-    activate Scr
-    Scr->>Bug: PJ_BUG_GAME_UPDATE
-    Scr->>Arr: PJ_ARROW_GAME_UPDATE
-    Scr->>Scr: check_game_time_limit()
-    Scr->>Scr: check_bug_collisions()
-    Scr->>Scr: check_arrow_collisions()
-    deactivate Scr
+    rect rgb(85, 45, 115)
+        Note left of Player: GAME PLAY
+        Note left of Player: Normal
+        AK->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+        activate Scr
+        Scr->>Bug: PJ_BUG_GAME_UPDATE
+        Scr->>Arr: PJ_ARROW_GAME_UPDATE
+        Scr->>Scr: check_game_time_limit()
+        Scr->>Scr: check_bug_collisions()
+        Scr->>Scr: check_arrow_collisions()
+        deactivate Scr
 
-    Note left of Player: Action
-    Player->>AK: Button [UP]
-    AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
-    activate Scr
-    Scr->>Pnd: PJ_PANDA_JUMP_RIGHT
-    deactivate Scr
-    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+        Note left of Player: Action
+        Player->>AK: Button [UP]
+        AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_JUMP_RIGHT
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-    Player->>AK: Button [DOWN]
-    AK->>Scr: AC_DISPLAY_BUTTON_DOWN_PRESSED
-    activate Scr
-    Scr->>Pnd: PJ_PANDA_JUMP_LEFT
-    deactivate Scr
-    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+        Player->>AK: Button [DOWN]
+        AK->>Scr: AC_DISPLAY_BUTTON_DOWN_PRESSED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_JUMP_LEFT
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-    Player->>AK: Button [MODE] release
-    AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
-    activate Scr
-    Scr->>Pnd: PJ_PANDA_GAME_UP
-    deactivate Scr
-    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+        Player->>AK: Button [MODE] release
+        AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_GAME_UP
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-    Player->>AK: Button [MODE] long release
-    AK->>Scr: AC_DISPLAY_BUTTON_MODE_LONG_RELEASED
-    activate Scr
-    Scr->>Pnd: PJ_PANDA_GAME_DOWN
-    deactivate Scr
-    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+        Player->>AK: Button [MODE] long release
+        AK->>Scr: AC_DISPLAY_BUTTON_MODE_LONG_RELEASED
+        activate Scr
+        Scr->>Pnd: PJ_PANDA_GAME_DOWN
+        deactivate Scr
+        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+    end
 
-    Note left of Player: RESET GAME
-    Note over Scr: (Triggered if CRASH or WIN)
-    Scr->>Scr: Save Score to EEPROM
-    Scr->>Scr: STATE (GAME_OVER)
-    Scr->>Scr: BUZZER_PlaySound()
+    rect rgb(30, 85, 135)
+        Note left of Player: RESET GAME
+        Note over Scr: (Triggered if CRASH or WIN)
+        Scr->>Scr: Save Score to EEPROM
+        Scr->>Scr: STATE (GAME_OVER)
+        Scr->>Scr: BUZZER_PlaySound()
+        
+        Player->>AK: Button [UP]
+        AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
+        activate Scr
+        Scr->>Scr: STATE (GAME_PLAY)
+        Scr->>Pnd: PJ_PANDA_GAME_SETUP
+        Scr->>Bug: PJ_BUG_GAME_SETUP
+        Scr->>Arr: PJ_ARROW_GAME_SETUP
+        deactivate Scr
+    end
     
-    Player->>AK: Button [UP]
-    AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
-    activate Scr
-    Scr->>Scr: STATE (GAME_PLAY)
-    Scr->>Pnd: PJ_PANDA_GAME_SETUP
-    Scr->>Bug: PJ_BUG_GAME_SETUP
-    Scr->>Arr: PJ_ARROW_GAME_SETUP
-    deactivate Scr
-    
-    Note left of Player: EXIT
-    Player->>AK: Button [MODE] release
-    AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
-    activate Scr
-    Scr->>Scr: Remove timer - Time tick
-    Scr->>Scr: STATE (GAME_OFF)
-    Scr->>Scr: SCREEN_TRAN(scr_menu_game)
-    deactivate Scr
+    rect rgb(135, 45, 55)
+        Note left of Player: EXIT
+        Player->>AK: Button [MODE] release
+        AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
+        activate Scr
+        Scr->>Scr: Remove timer - Time tick
+        Scr->>Scr: STATE (GAME_OFF)
+        Scr->>Scr: SCREEN_TRAN(scr_menu_game)
+        deactivate Scr
+    end
 ```
 <p align="center"><strong><em>Figure 7:</em></strong> Basic game sequence logic</p>
 
