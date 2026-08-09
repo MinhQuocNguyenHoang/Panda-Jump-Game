@@ -48,53 +48,27 @@ What makes Panda Jump stand out in the AK game series:
 
 ### I. Hardware
 
-<table align="center">
-  <tr>
-    <td align="center"><img src="hardware/images/ak-embedded-base-kit-version-3.jpg" alt="AK Embedded Base Kit - STM32L151 - v3.0" width="480"/></td>
-  </tr>
-</table>
-<p align="center"><strong><em>Figure 1:</em></strong> AK Embedded Base Kit - STM32L151</p>
+<p align="center">
+  <img src="hardware/images/ak-embedded-base-kit-version-3.jpg" alt="AK Embedded Base Kit - STM32L151" width="480"/><br>
+  <sub><strong>Figure 1:</strong> AK Embedded Base Kit - STM32L151</sub>
+</p>
 
-[AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) is an evaluation kit for advanced embedded software learners.
+The [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) is an evaluation kit for advanced embedded software learners. It integrates a **1.54" OLED LCD**, **3 push buttons**, and a **tonal buzzer**—everything needed to study event-driven systems through hands-on game design. It also exposes **RS485**, **Qwiic**, and **Grove** connectors for broader prototyping.
 
-The kit integrates a **1.54" OLED LCD**, **3 push buttons**, and **a buzzer** capable of playing tonal sequences-everything needed to study event-driven systems through hands-on game design. It also exposes **RS485**, **Qwiic**, and **Grove** connectors for broader embedded prototyping.
+#### Specifications & Flash Partition Layout
 
-**MCU Overview:**
+- **MCU:** STM32L151CBT6 (ARM Cortex-M3, 16 KB RAM, 128 KB Flash)
 
-```text
-SoC Name : STM32L151CBT6
-RAM      : 16 KB
+| Memory Range | Size | Partition | Description |
+|---|---|---|---|
+| `0x08000000 - 0x08001FFF` | 8 KB | Bootloader | AK Bootloader Partition |
+| `0x08002000 - 0x08002FFF` | 4 KB | BSF Shared | Data sharing between Bootloader & Application |
+| `0x08003000 - 0x0801FFFF` | 116 KB | Application | **Panda Jump Firmware** |
 
-Flash Partitions Layout
-----------------------
-[ 0x08000000 - 0x08001FFF ] : Bootloader Partition (8 KB)
-=> AK Bootloader
-
-[ 0x08002000 - 0x08002FFF ] : BSF Shared Partition (4 KB)
-=> Used for data sharing between Bootloader and Application
-
-[ 0x08003000 - 0x0801FFFF ] : Application Partition (116 KB)
-=> Panda Jump firmware
-```
-
-**MCU Naming Convention:**
-
-| Part | Meaning |
-|---|---|
-| `STM32` | STMicroelectronics 32-bit MCU family. |
-| `L` | Low-power series. |
-| `151` | STM32L151 product line. |
-| `C` | 48-pin package. |
-| `B` | 128 KB Flash memory. |
-| `T` | LQFP package. |
-| `6` | Industrial temperature grade. |
-
-<table align="center">
-  <tr>
-    <td align="center"><img src="hardware/images/board-view-top-bottom.png" alt="AK Embedded Base Kit - Board view Top + Bottom" width="900"/></td>
-  </tr>
-</table>
-<p align="center"><strong><em>Figure 2:</em></strong> Board view Top + Bottom</p>
+<p align="center">
+  <img src="hardware/images/board-view-top-bottom.png" alt="AK Embedded Base Kit - Board view Top + Bottom" width="850"/><br>
+  <sub><strong>Figure 2:</strong> Board view (Top & Bottom)</sub>
+</p>
 
 ---
 
@@ -184,87 +158,79 @@ sequenceDiagram
     participant Bug as Bug
     participant Arr as Arrow
 
-    rect rgb(20, 40, 20)
-        Note left of Player: SCREEN_ENTRY
-        AK->>Scr: SCREEN_ENTRY
-        activate Scr
-        Scr->>Pnd: PJ_PANDA_GAME_SETUP
-        Scr->>Bug: PJ_BUG_GAME_SETUP
-        Scr->>Arr: PJ_ARROW_GAME_SETUP
-        Scr->>Scr: STATE (GAME_PLAY)
-        Scr->>Scr: Setup timer - Time tick
-        deactivate Scr
-    end
+    Note left of Player: SCREEN_ENTRY
+    AK->>Scr: SCREEN_ENTRY
+    activate Scr
+    Scr->>Pnd: PJ_PANDA_GAME_SETUP
+    Scr->>Bug: PJ_BUG_GAME_SETUP
+    Scr->>Arr: PJ_ARROW_GAME_SETUP
+    Scr->>Scr: STATE (GAME_PLAY)
+    Scr->>Scr: Setup timer - Time tick
+    deactivate Scr
 
-    rect rgb(40, 20, 40)
-        Note left of Player: GAME PLAY
-        Note left of Player: Normal
-        AK->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
-        activate Scr
-        Scr->>Bug: PJ_BUG_GAME_UPDATE
-        Scr->>Arr: PJ_ARROW_GAME_UPDATE
-        Scr->>Scr: check_game_time_limit()
-        Scr->>Scr: check_bug_collisions()
-        Scr->>Scr: check_arrow_collisions()
-        deactivate Scr
+    Note left of Player: GAME PLAY
+    Note left of Player: Normal
+    AK->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+    activate Scr
+    Scr->>Bug: PJ_BUG_GAME_UPDATE
+    Scr->>Arr: PJ_ARROW_GAME_UPDATE
+    Scr->>Scr: check_game_time_limit()
+    Scr->>Scr: check_bug_collisions()
+    Scr->>Scr: check_arrow_collisions()
+    deactivate Scr
 
-        Note left of Player: Action
-        Player->>AK: Button [UP]
-        AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
-        activate Scr
-        Scr->>Pnd: PJ_PANDA_JUMP_RIGHT
-        deactivate Scr
-        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+    Note left of Player: Action
+    Player->>AK: Button [UP]
+    AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
+    activate Scr
+    Scr->>Pnd: PJ_PANDA_JUMP_RIGHT
+    deactivate Scr
+    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-        Player->>AK: Button [DOWN]
-        AK->>Scr: AC_DISPLAY_BUTTON_DOWN_PRESSED
-        activate Scr
-        Scr->>Pnd: PJ_PANDA_JUMP_LEFT
-        deactivate Scr
-        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+    Player->>AK: Button [DOWN]
+    AK->>Scr: AC_DISPLAY_BUTTON_DOWN_PRESSED
+    activate Scr
+    Scr->>Pnd: PJ_PANDA_JUMP_LEFT
+    deactivate Scr
+    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-        Player->>AK: Button [MODE] release
-        AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
-        activate Scr
-        Scr->>Pnd: PJ_PANDA_GAME_UP
-        deactivate Scr
-        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
+    Player->>AK: Button [MODE] release
+    AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
+    activate Scr
+    Scr->>Pnd: PJ_PANDA_GAME_UP
+    deactivate Scr
+    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-        Player->>AK: Button [MODE] long release
-        AK->>Scr: AC_DISPLAY_BUTTON_MODE_LONG_RELEASED
-        activate Scr
-        Scr->>Pnd: PJ_PANDA_GAME_DOWN
-        deactivate Scr
-        Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
-    end
+    Player->>AK: Button [MODE] long release
+    AK->>Scr: AC_DISPLAY_BUTTON_MODE_LONG_RELEASED
+    activate Scr
+    Scr->>Pnd: PJ_PANDA_GAME_DOWN
+    deactivate Scr
+    Pnd->>Scr: AC_DISPLAY_PANDA_GAME_UPDATE
 
-    rect rgb(20, 40, 60)
-        Note left of Player: RESET GAME
-        Note over Scr: (Triggered if CRASH or WIN)
-        Scr->>Scr: Save Score to EEPROM
-        Scr->>Scr: STATE (GAME_OVER)
-        Scr->>Scr: BUZZER_PlaySound()
-        
-        Player->>AK: Button [UP]
-        AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
-        activate Scr
-        Scr->>Scr: STATE (GAME_PLAY)
-        Scr->>Pnd: PJ_PANDA_GAME_SETUP
-        Scr->>Bug: PJ_BUG_GAME_SETUP
-        Scr->>Arr: PJ_ARROW_GAME_SETUP
-        deactivate Scr
-    end
+    Note left of Player: RESET GAME
+    Note over Scr: (Triggered if CRASH or WIN)
+    Scr->>Scr: Save Score to EEPROM
+    Scr->>Scr: STATE (GAME_OVER)
+    Scr->>Scr: BUZZER_PlaySound()
     
-    rect rgb(60, 20, 20)
-        Note left of Player: EXIT
-        Player->>AK: Button [MODE] release
-        AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
-        activate Scr
-        Scr->>Scr: Remove timer - Time tick
-        Scr->>Scr: STATE (GAME_OFF)
-        Scr->>Scr: SCREEN_TRAN(scr_menu_game)
-        deactivate Scr
-    end
+    Player->>AK: Button [UP]
+    AK->>Scr: AC_DISPLAY_BUTTON_UP_PRESSED
+    activate Scr
+    Scr->>Scr: STATE (GAME_PLAY)
+    Scr->>Pnd: PJ_PANDA_GAME_SETUP
+    Scr->>Bug: PJ_BUG_GAME_SETUP
+    Scr->>Arr: PJ_ARROW_GAME_SETUP
+    deactivate Scr
+    
+    Note left of Player: EXIT
+    Player->>AK: Button [MODE] release
+    AK->>Scr: AC_DISPLAY_BUTTON_MODE_RELEASED
+    activate Scr
+    Scr->>Scr: Remove timer - Time tick
+    Scr->>Scr: STATE (GAME_OFF)
+    Scr->>Scr: SCREEN_TRAN(scr_menu_game)
+    deactivate Scr
 ```
 <p align="center"><strong><em>Figure 7:</em></strong> Basic game sequence logic</p>
 
