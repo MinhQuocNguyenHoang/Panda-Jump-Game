@@ -53,7 +53,7 @@ What makes Panda Jump stand out in the AK game series:
   <sub><strong>Figure 1:</strong> AK Embedded Base Kit - STM32L151</sub>
 </p>
 
-The [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) is an evaluation kit for advanced embedded software learners. It integrates a **1.54" OLED LCD**, **3 push buttons**, and a **tonal buzzer**—everything needed to study event-driven systems through hands-on game design. It also exposes **RS485**, **Qwiic**, and **Grove** connectors for broader prototyping.
+The [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-trinh-nhung-vi-dieu-khien-mcu) is an evaluation kit for advanced embedded software learners. It integrates a **1.54" OLED LCD**, **3 push buttons**, and a **tonal buzzer**-everything needed to study event-driven systems through hands-on game design. It also exposes **RS485**, **Qwiic**, and **Grove** connectors for broader prototyping.
 
 #### Specifications & Flash Partition Layout
 
@@ -74,7 +74,7 @@ The [AK Embedded Base Kit](https://epcb.vn/products/ak-embedded-base-kit-lap-tri
 
 ### II. Game Description and Objects
 
-When powered on, the kit walks through: **Startup (AK Logo)** → **QR Code** (pointing to this repository) → **Welcome** - where a panda climbs the right bamboo, a bug crawls the left one, and an arrow flies across the screen as a live gameplay preview - then lands on the **Main Menu**.
+When powered on, the kit walks through: **Startup (AK Logo)** -> **QR Code** (pointing to this repository) -> **Welcome** -> where a panda climbs the right bamboo, a bug crawls the left one, and an arrow flies across the screen as a live gameplay preview - then lands on the **Main Menu**.
 
 <table align="center">
   <tr>
@@ -100,9 +100,9 @@ The **Main Menu** offers four options:
 
 | Bitmap | Object Name | Description |
 | :---: | :--- | :--- |
-| <img src="resources/images/bitmap/panda.gif" width="90"/> | **Panda** | The player character. Grips the left or right face of one of three bamboo trunks (`lane` 0–2, `side` 0–1). Climbs vertically with **[Mode]**; jumps lanes and swaps sides with **[Up]** / **[Down]**. |
-| <img src="resources/images/bitmap/bug.gif" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above → explosion + score. Touched from the side or below → Game Over. |
-| <img src="resources/images/bitmap/arrow.gif" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda → instant Game Over. |
+| <img src="resources/images/bitmap/panda.gif" width="90"/> | **Panda** | The player character. Grips the left or right face of one of three bamboo trunks (`lane` 0-2, `side` 0-1). Climbs vertically with **[Mode]**; jumps lanes and swaps sides with **[Up]** / **[Down]**. |
+| <img src="resources/images/bitmap/bug.gif" width="90"/> | **Bamboo Bug** | A spiked insect that crawls vertically along a bamboo face in both directions. Stomped from above -> explosion + score. Touched from the side or below -> Game Over. |
+| <img src="resources/images/bitmap/arrow.gif" width="90"/> | **Arrow** | A horizontal projectile crossing the full screen width at variable speed. Any contact with the panda -> instant Game Over. |
 | <img src="resources/images/bitmap/bamboo.png" height="90"/> | **Bamboo Trunk** | Three fixed vertical columns defining the lane grid. Both panda and bugs are snapped to the left or right face of each trunk. |
 | <img src="resources/images/bitmap/boom.gif" width="90"/> | **Boom** | A 4-tick explosion sprite drawn at the bug's coordinates after a successful stomp. Visual confirmation only-no hitbox or area effect. |
 
@@ -121,7 +121,7 @@ The **Main Menu** offers four options:
 #### Game Mechanics:
 
 - **Scoring:** A successful stomp scores **10 pts** (Easy) / **20 pts** (Medium) / **30 pts** (Hard).
-- **Difficulty:** Moving from Easy → Medium → Hard increases max simultaneous bugs (1→2→3), spawn probability per 100 ms tick (6%→12%→20%), and arrow speed range (1→1–2→2–3 px/tick).
+- **Difficulty:** Moving from Easy -> Medium -> Hard increases max simultaneous bugs (1->2->3), spawn probability per 100 ms tick (6%->12%->20%), and arrow speed range (1->1-2->2-3 px/tick).
 - **Victory condition:** Survive until the countdown reaches zero. The kit plays the *Merry Christmas* melody and shows a trophy animation with sparkling stars.
 - **Defeat condition:** Any arrow contact, or any non-stomp bug collision, triggers Game Over immediately with a `BANG` sound.
 - **Leaderboard:** Top-3 scores and configuration settings are persistently written to and loaded from the EEPROM. High scores and game settings persist across power resets, protected by magic-number validation and checksum verification (see [docs/04-eeprom-data-storage.md](docs/04-eeprom-data-storage.md)).
